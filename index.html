@@ -734,6 +734,25 @@ const GRADE_INFO={
 const LV_LABEL={mid3:"중3",high1:"고1",high2:"고2",high3:"고3",idiom:"숙어"};
 const MODE_LABEL={'en-ko':'영어→한글','ko-en':'한글→영어','idiom-en-ko':'숙어 영→한','idiom-ko-en':'숙어 한→영','all':'전체 종합'};
 
+// ═══════════════ FIREBASE ════════════════
+const FB='https://inje2div-default-rtdb.firebaseio.com';
+function fbKey(s){return s.replace(/[.#$\[\]/]/g,'_');}
+async function fbGet(path){try{const r=await fetch(`${FB}/${path}.json`);return r.ok?r.json():null;}catch(e){return null;}}
+async function fbSet(path,data){try{await fetch(`${FB}/${path}.json`,{method:'PUT',body:JSON.stringify(data),headers:{'Content-Type':'application/json'}});}catch(e){}}
+async function fbPatch(path,data){try{await fetch(`${FB}/${path}.json`,{method:'PATCH',body:JSON.stringify(data),headers:{'Content-Type':'application/json'}});}catch(e){}}
+
+async function syncPlayerFromFirebase(name){
+  if(!name)return;
+  const k=fbKey(name);
+  // Sync stages
+  const stages=await fbGet(`players/${k}/stages`);
+  if(stages){Object.entries(stages).forEach(([key,val])=>{localStorage.setItem(namePrefix()+'stg_'+key.replace(/_([^_]*)$/,'_$1').replace('_','_'),val);
+    localStorage.setItem('wq_'+name+'_stg_'+key,val);});}
+  // Sync days
+  const days=await fbGet(`players/${k}/days`);
+  if(days){Object.entries(days).forEach(([key,val])=>{localStorage.setItem('wq_'+name+'_'+key,JSON.stringify(val));});}
+}
+
 function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
 
 function calcRank(c,t){
@@ -757,10 +776,17 @@ function appendSession(s){
   d.sessions.push(s);d.totalScore+=s.score;d.totalCorrect+=s.correct;
   d.totalWrong+=s.wrong;d.bestStreak=Math.max(d.bestStreak,s.maxStreak);
   saveDay(k,d);
+  const n=getPlayerName();if(!n)return;
+  const dateKey=k.replace('wq_'+n+'_','');
+  fbSet(`players/${fbKey(n)}/days/${dateKey}`,d);
 }
 function stageKey(g,m){return namePrefix()+'stg_'+(g||'null')+'_'+m;}
 function loadStageIdx(g,m){return parseInt(localStorage.getItem(stageKey(g,m))||'0');}
-function saveStageIdx(g,m,i){localStorage.setItem(stageKey(g,m),i);}
+function saveStageIdx(g,m,i){
+  localStorage.setItem(stageKey(g,m),i);
+  const n=getPlayerName();if(!n)return;
+  fbSet(`players/${fbKey(n)}/stages/${(g||'null')}_${m}`,i);
+}
 
 // ═══════════════ PLAYER NAME & RANKING ════════════════
 function getPlayerName(){return localStorage.getItem('wq_player_name')||'';}
@@ -776,6 +802,9 @@ function updateRanking(name,score,correct,wrong){
   else{r.push({name,score,correct,wrong,acc});}
   r.sort((a,b)=>b.score-a.score);
   saveRanking(r);
+  if(!name)return;
+  const entry=r.find(x=>x.name===name);
+  if(entry)fbSet(`ranking/${fbKey(name)}`,{name:entry.name,score:entry.score,correct:entry.correct,wrong:entry.wrong,acc:entry.acc});
 }
 function checkNameAndStart(cb){
   const n=getPlayerName();
@@ -789,7 +818,9 @@ function saveName(){
   if(!n){alert('이름을 입력해주세요!');return;}
   setPlayerName(n);
   document.getElementById('name-modal').classList.remove('show');
-  if(window._nameCallback){window._nameCallback();window._nameCallback=null;}
+  syncPlayerFromFirebase(n).then(()=>{
+    if(window._nameCallback){window._nameCallback();window._nameCallback=null;}
+  });
 }
 document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
 function changeName(){
@@ -798,16 +829,17 @@ function changeName(){
   document.getElementById('name-modal').classList.add('show');
   document.getElementById('name-input').value='';
   document.getElementById('name-input').focus();
-  window._nameCallback=()=>{buildGradeGrid();renderTodayCard();showScreen('sc-home');};
+  window._nameCallback=()=>{
+    const newName=getPlayerName();
+    syncPlayerFromFirebase(newName).then(()=>{buildGradeGrid();renderTodayCard();showScreen('sc-home');});
+  };
 }
-function goRanking(){
+function renderRankTable(r){
   const me=getPlayerName();
-  document.getElementById('my-name-lbl').textContent=me||'(이름 없음)';
-  const r=loadRanking();
   const tbl=document.getElementById('rank-table');tbl.innerHTML='';
   if(!r.length){
     tbl.innerHTML='<div style="text-align:center;color:var(--muted);padding:24px">아직 등록된 플레이어가 없어요.<br>게임을 완료하면 자동으로 등록됩니다!</div>';
-    showScreen('sc-ranking');return;
+    return;
   }
   const topScore=r[0].score||1;
   const barColors=['linear-gradient(90deg,#ffd700,#ffb300)','linear-gradient(90deg,#a8d8ff,#6ab4ff)','linear-gradient(90deg,#ffb347,#ff8c00)',
@@ -835,7 +867,27 @@ function goRanking(){
       </div>`;
     tbl.appendChild(row);
   });
+}
+function goRanking(){
+  const me=getPlayerName();
+  document.getElementById('my-name-lbl').textContent=me||'(이름 없음)';
+  // Show local ranking immediately, then refresh from Firebase
+  const local=loadRanking();
+  renderRankTable(local);
   showScreen('sc-ranking');
+  fbGet('ranking').then(data=>{
+    if(!data)return;
+    const fbRanking=Object.values(data).sort((a,b)=>b.score-a.score);
+    // Merge: update local ranking with Firebase data
+    const merged={};
+    local.forEach(p=>{merged[p.name]=p;});
+    fbRanking.forEach(p=>{
+      if(!merged[p.name]||p.score>merged[p.name].score)merged[p.name]=p;
+    });
+    const final=Object.values(merged).sort((a,b)=>b.score-a.score);
+    saveRanking(final);
+    renderRankTable(final);
+  });
 }
 
 // ═══════════════ BUBBLES ════════════════
