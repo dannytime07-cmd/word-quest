@@ -367,6 +367,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <button class="sm-btn" onclick="goRanking()">🏆 랭킹</button>
     <button class="sm-btn" onclick="goRecords()">📊 전체 기록</button>
     <button class="sm-btn" onclick="changeName()">✏️ 이름 변경</button>
+    <button class="sm-btn" style="background:rgba(255,80,80,.2);border-color:rgba(255,80,80,.5);" onclick="deleteAccount()">🗑️ 계정 삭제</button>
   </div>
 </div>
 
@@ -823,6 +824,24 @@ function saveName(){
   });
 }
 document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
+async function deleteAccount(){
+  const n=getPlayerName();
+  if(!n){alert('로그인된 계정이 없습니다.');return;}
+  if(!confirm(`"${n}" 계정의 모든 데이터를 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`))return;
+  // Remove all localStorage keys for this player
+  Object.keys(localStorage).filter(k=>k.startsWith('wq_'+n+'_')).forEach(k=>localStorage.removeItem(k));
+  localStorage.removeItem('wq_player_name');
+  // Remove from Firebase
+  const k=fbKey(n);
+  await Promise.all([
+    fetch(`${FB}/players/${k}.json`,{method:'DELETE'}),
+    fetch(`${FB}/ranking/${k}.json`,{method:'DELETE'})
+  ]).catch(()=>{});
+  G={};
+  alert(`"${n}" 계정이 삭제되었습니다.`);
+  buildGradeGrid();renderTodayCard();showScreen('sc-home');
+  document.getElementById('home-name-lbl').textContent='';
+}
 function changeName(){
   localStorage.removeItem('wq_player_name');
   G={};
