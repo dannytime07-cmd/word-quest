@@ -54,8 +54,15 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   background:linear-gradient(135deg,#fff,var(--primary));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   text-shadow:none;filter:drop-shadow(0 2px 8px rgba(110,231,255,.5));}
-.logo .sub-name{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:4px;
-  text-shadow:0 2px 8px rgba(0,0,0,.3);}
+.logo .sub-name{font-size:2rem;font-weight:900;margin-bottom:4px;letter-spacing:1px;
+  background:linear-gradient(135deg,#ffffff 0%,#a8e8ff 35%,#ffffff 60%,#c8f4ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 10px rgba(168,232,255,.9)) drop-shadow(0 2px 6px rgba(0,50,120,.5));
+  animation:aquaShine 3s ease-in-out infinite alternate;}
+@keyframes aquaShine{
+  0%{filter:drop-shadow(0 0 8px rgba(168,232,255,.7)) drop-shadow(0 2px 6px rgba(0,50,120,.5));}
+  100%{filter:drop-shadow(0 0 22px rgba(200,244,255,1)) drop-shadow(0 2px 8px rgba(0,50,120,.5));}
+}
 .logo p{color:var(--muted);margin-top:4px;font-size:.82rem;}
 
 .sec-lbl{width:100%;font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;
@@ -321,7 +328,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 <!-- ══ HOME ══ -->
 <div class="screen active" id="sc-home">
   <div class="logo">
-    <div class="sub-name">JS song's</div>
+    <div class="sub-name">JS Song's</div>
     <h1>WORD QUEST</h1>
     <p>영어 단어 · 숙어 5지선다 퀴즈 — 중3 ~ 고3</p>
   </div>
