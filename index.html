@@ -1,121 +1,129 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JS song's WORD QUEST</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#1e2a4a;--surface:#253358;--card:#2d3d6a;--card2:#344575;
-  --border:#3d5080;--primary:#6ab4ff;--pg:rgba(106,180,255,.3);
-  --sec:#ff8ecb;--gold:#ffd166;--green:#2de0a5;--red:#ff6b7a;
-  --orange:#ffb347;--text:#e8f0ff;--muted:#8aabcc;--white:#fff;--r:14px;
+  --primary:#6ee7ff;--sec:#ff8ecb;--gold:#ffd166;--green:#2de0a5;
+  --red:#ff5c6e;--orange:#ffb347;--text:#fff;--muted:rgba(255,255,255,.6);
+  --card:rgba(255,255,255,.12);--card2:rgba(255,255,255,.18);
+  --border:rgba(255,255,255,.25);--r:16px;
 }
 body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  background:var(--bg);color:var(--text);min-height:100vh;
-  display:flex;align-items:flex-start;justify-content:center;}
-.bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(106,180,255,.10) 0%,transparent 70%),
-             radial-gradient(ellipse 50% 30% at 80% 80%,rgba(255,142,203,.08) 0%,transparent 70%);}
+  color:var(--text);min-height:100vh;
+  display:flex;align-items:flex-start;justify-content:center;
+  background:linear-gradient(170deg,#b8e8ff 0%,#5ab4e8 18%,#1a7ac4 40%,#0d4d8a 65%,#06305e 85%,#021830 100%);
+  background-attachment:fixed;}
+
+/* BUBBLES */
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bbl{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);
+  animation:rise linear infinite;}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:.7}
+  80%{opacity:.4}100%{transform:translateY(-110vh) scale(1.3);opacity:0}}
+
+/* SEAWEED */
+.seaweed{position:fixed;bottom:0;left:0;right:0;pointer-events:none;z-index:0;height:80px;}
+
+/* LIGHT GLOW */
+.ocean-glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 40% at 30% 10%,rgba(180,230,255,.25) 0%,transparent 70%),
+             radial-gradient(ellipse 50% 30% at 80% 70%,rgba(100,180,255,.15) 0%,transparent 70%);}
+
 .app{position:relative;z-index:1;width:100%;max-width:660px;padding:16px;}
-.screen{display:none;flex-direction:column;align-items:center;gap:16px;padding-bottom:32px;}
+.screen{display:none;flex-direction:column;align-items:center;gap:14px;padding-bottom:32px;}
 .screen.active{display:flex;}
+
+/* GLASS CARD */
+.glass{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1.5px solid var(--border);border-radius:var(--r);}
 
 /* NAV */
 .nav-bar{width:100%;display:flex;align-items:center;gap:10px;padding:4px 0 2px;}
-.nav-back{background:var(--card);border:1px solid var(--border);border-radius:20px;
-  padding:7px 14px;font-size:.8rem;color:var(--muted);cursor:pointer;transition:all .15s;}
-.nav-back:hover{border-color:var(--primary);color:var(--primary);}
-.nav-t{font-size:.9rem;font-weight:700;color:var(--text);flex:1;text-align:center;}
+.nav-back{background:rgba(255,255,255,.15);border:1px solid var(--border);border-radius:20px;
+  padding:7px 14px;font-size:.8rem;color:var(--text);cursor:pointer;transition:all .15s;backdrop-filter:blur(8px);}
+.nav-back:hover{background:rgba(255,255,255,.28);}
+.nav-t{font-size:.9rem;font-weight:700;color:var(--text);flex:1;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.3);}
 .nav-sp{width:72px;}
 
 /* LOGO */
-.logo{text-align:center;padding:16px 0 4px;}
-.logo h1{font-size:2rem;font-weight:900;letter-spacing:-1px;
-  background:linear-gradient(135deg,var(--primary),var(--sec));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.logo .sub-name{font-size:1.1rem;font-weight:700;color:var(--gold);margin-top:2px;}
+.logo{text-align:center;padding:12px 0 4px;}
+.logo h1{font-size:2.2rem;font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(135deg,#fff,var(--primary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;filter:drop-shadow(0 2px 8px rgba(110,231,255,.5));}
+.logo .sub-name{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:4px;
+  text-shadow:0 2px 8px rgba(0,0,0,.3);}
 .logo p{color:var(--muted);margin-top:4px;font-size:.82rem;}
 
-.sec-lbl{width:100%;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;padding-left:2px;}
+.sec-lbl{width:100%;font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;
+  letter-spacing:2px;padding-left:2px;text-shadow:0 1px 4px rgba(0,0,0,.3);}
 
 /* GRADE GRID */
 .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;}
-.grade-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);
-  padding:18px 8px;text-align:center;cursor:pointer;transition:all .18s;}
-.grade-card:hover{transform:translateY(-2px);}
+.grade-card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:18px 8px;text-align:center;cursor:pointer;transition:all .18s;}
+.grade-card:hover{transform:translateY(-3px);background:var(--card2);}
 .grade-card .g-icon{font-size:1.6rem;margin-bottom:7px;}
-.grade-card h3{font-size:.95rem;font-weight:800;color:var(--white);}
+.grade-card h3{font-size:.95rem;font-weight:800;}
 .grade-card p{font-size:.68rem;color:var(--muted);margin-top:2px;}
 .grade-card .g-stage{font-size:.65rem;margin-top:5px;padding:2px 8px;border-radius:10px;
-  display:inline-block;font-weight:700;background:rgba(124,111,255,.12);color:var(--primary);}
-.grade-card.mid3{border-color:rgba(0,224,160,.3);}
-.grade-card.high1{border-color:rgba(124,111,255,.3);}
-.grade-card.high2{border-color:rgba(255,171,79,.3);}
-.grade-card.high3{border-color:rgba(255,77,106,.3);}
-.grade-card.mid3:hover{border-color:var(--green);box-shadow:0 6px 20px rgba(0,224,160,.2);}
-.grade-card.high1:hover{border-color:var(--primary);box-shadow:0 6px 20px rgba(124,111,255,.2);}
-.grade-card.high2:hover{border-color:var(--orange);box-shadow:0 6px 20px rgba(255,171,79,.2);}
-.grade-card.high3:hover{border-color:var(--red);box-shadow:0 6px 20px rgba(255,77,106,.2);}
+  display:inline-block;font-weight:700;background:rgba(110,231,255,.2);color:var(--primary);}
 
 /* MIX STRIP */
 .mix-strip{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.mix-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);
-  padding:14px 16px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:12px;}
-.mix-card:hover{border-color:var(--primary);transform:translateY(-1px);box-shadow:0 6px 20px var(--pg);}
+.mix-card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .18s;
+  display:flex;align-items:center;gap:12px;}
+.mix-card:hover{background:var(--card2);transform:translateY(-1px);}
 .mix-card .icon{font-size:1.4rem;flex-shrink:0;}
-.mix-card h3{font-size:.88rem;font-weight:700;color:var(--white);}
+.mix-card h3{font-size:.88rem;font-weight:700;}
 .mix-card p{font-size:.7rem;color:var(--muted);margin-top:2px;}
-.mix-card.all{grid-column:1/-1;background:linear-gradient(135deg,#2d3d6a,#3a2d6a);border-color:var(--primary);}
+.mix-card.all{grid-column:1/-1;background:rgba(110,100,255,.25);border-color:rgba(110,231,255,.5);}
 
 /* TODAY CARD */
-.today-card{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.today-card{width:100%;padding:18px 20px;}
 .today-card h3{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
 .today-empty{color:var(--muted);font-size:.84rem;text-align:center;padding:6px 0;}
 .today-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.today-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
+.today-stat{background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
 .today-stat .tv{font-size:1.1rem;font-weight:800;}
 .today-stat .tl{font-size:.68rem;color:var(--muted);margin-top:2px;}
 .today-grade-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;
   padding-top:12px;border-top:1px solid var(--border);}
-.today-grade-msg{font-size:.8rem;color:var(--text);}
 
 /* GRADE MODE SELECT */
 .grade-header{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0;}
-.grade-big{font-size:1.4rem;font-weight:900;padding:8px 26px;border-radius:30px;}
-.grade-big.mid3{background:rgba(0,224,160,.12);color:var(--green);border:1.5px solid rgba(0,224,160,.3);}
-.grade-big.high1{background:rgba(124,111,255,.12);color:var(--primary);border:1.5px solid rgba(124,111,255,.3);}
-.grade-big.high2{background:rgba(255,171,79,.12);color:var(--orange);border:1.5px solid rgba(255,171,79,.3);}
-.grade-big.high3{background:rgba(255,77,106,.12);color:var(--red);border:1.5px solid rgba(255,77,106,.3);}
+.grade-big{font-size:1.4rem;font-weight:900;padding:8px 26px;border-radius:30px;
+  background:rgba(255,255,255,.15);border:1.5px solid var(--border);}
 .grade-header p{font-size:.8rem;color:var(--muted);}
 .mode-list{width:100%;display:flex;flex-direction:column;gap:9px;}
-.mode-row{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);
-  padding:16px 18px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:14px;}
-.mode-row:hover{border-color:var(--primary);transform:translateX(3px);box-shadow:0 4px 16px var(--pg);}
+.mode-row{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:14px;}
+.mode-row:hover{background:var(--card2);transform:translateX(3px);}
 .mode-row .icon{font-size:1.5rem;flex-shrink:0;}
-.mode-row .txt h3{font-size:.95rem;font-weight:700;color:var(--white);}
+.mode-row .txt h3{font-size:.95rem;font-weight:700;}
 .mode-row .txt p{font-size:.74rem;color:var(--muted);margin-top:2px;}
 .mode-row .m-stage{font-size:.7rem;font-weight:700;padding:2px 9px;border-radius:10px;
-  background:rgba(124,111,255,.12);color:var(--primary);border:1px solid rgba(124,111,255,.25);margin-left:auto;}
-.mode-row.all-mode{background:linear-gradient(135deg,#1a1a3f,#25153a);border-color:var(--primary);}
+  background:rgba(110,231,255,.2);color:var(--primary);border:1px solid rgba(110,231,255,.3);margin-left:auto;flex-shrink:0;}
+.reset-btn{font-size:.68rem;padding:3px 10px;border-radius:10px;border:1px solid rgba(255,100,100,.4);
+  background:rgba(255,100,100,.15);color:#ff9999;cursor:pointer;margin-left:8px;flex-shrink:0;transition:all .15s;}
+.reset-btn:hover{background:rgba(255,100,100,.3);}
 
 /* QUIZ HUD */
 .hud{width:100%;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.hud-pill{font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid transparent;}
-.hud-stage{color:var(--primary);background:rgba(124,111,255,.12);border-color:rgba(124,111,255,.25);}
-.hud-grade.mid3{color:var(--green);background:rgba(0,224,160,.1);border-color:rgba(0,224,160,.25);}
-.hud-grade.high1{color:var(--primary);background:rgba(124,111,255,.1);border-color:rgba(124,111,255,.25);}
-.hud-grade.high2{color:var(--orange);background:rgba(255,171,79,.1);border-color:rgba(255,171,79,.25);}
-.hud-grade.high3{color:var(--red);background:rgba(255,77,106,.1);border-color:rgba(255,77,106,.25);}
-.hud-grade.mixed{color:var(--gold);background:rgba(255,207,64,.1);border-color:rgba(255,207,64,.25);}
-.hud-score{color:var(--gold);background:rgba(255,207,64,.08);border-color:rgba(255,207,64,.2);margin-left:auto;}
+.hud-pill{font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:20px;
+  background:rgba(255,255,255,.15);border:1px solid var(--border);backdrop-filter:blur(8px);}
+.hud-stage{color:var(--primary);}
+.hud-score{color:var(--gold);margin-left:auto;}
 
 .prog-wrap{width:100%;}
 .prog-meta{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-bottom:5px;}
 .prog-meta .pg-right{color:var(--green);font-weight:700;}
-.prog-track{width:100%;height:9px;background:var(--surface);border-radius:9px;overflow:hidden;}
-.prog-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--green));transition:width .4s cubic-bezier(.4,0,.2,1);}
+.prog-track{width:100%;height:9px;background:rgba(255,255,255,.15);border-radius:9px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--green));transition:width .4s;}
 
 .streak-row{height:26px;width:100%;text-align:center;}
 .streak-chip{display:inline-flex;align-items:center;gap:5px;
@@ -123,47 +131,50 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   font-size:.8rem;font-weight:800;padding:3px 14px;border-radius:20px;animation:chipPop .2s ease;}
 @keyframes chipPop{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
 
-.q-card{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);
-  padding:30px 26px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;
-  transition:border-color .2s,box-shadow .2s;min-height:150px;justify-content:center;}
-.q-card.correct{border-color:var(--green);box-shadow:0 0 24px rgba(0,224,160,.15);}
-.q-card.wrong{border-color:var(--red);box-shadow:0 0 24px rgba(255,77,106,.15);}
-.q-top{display:flex;align-items:center;gap:8px;justify-content:center;}
-.q-lv-badge{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:.5px;}
-.q-lv-badge.mid3{background:rgba(0,224,160,.12);color:var(--green);border:1px solid rgba(0,224,160,.25);}
-.q-lv-badge.high1{background:rgba(124,111,255,.12);color:var(--primary);border:1px solid rgba(124,111,255,.25);}
-.q-lv-badge.high2{background:rgba(255,171,79,.12);color:var(--orange);border:1px solid rgba(255,171,79,.25);}
-.q-lv-badge.high3{background:rgba(255,77,106,.12);color:var(--red);border:1px solid rgba(255,77,106,.25);}
-.q-lv-badge.idiom{background:rgba(255,107,157,.12);color:var(--sec);border:1px solid rgba(255,107,157,.25);}
+/* QUESTION CARD */
+.q-card{width:100%;padding:26px 22px;text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:10px;transition:border-color .2s,box-shadow .2s;min-height:140px;justify-content:center;}
+.q-card.correct{border-color:var(--green);box-shadow:0 0 28px rgba(45,224,165,.3);}
+.q-card.wrong{border-color:var(--red);box-shadow:0 0 28px rgba(255,92,110,.3);}
+.q-top{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;}
+.q-lv-badge{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:10px;
+  background:rgba(255,255,255,.15);border:1px solid var(--border);}
+.pos-badge{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:10px;
+  background:rgba(255,211,102,.2);border:1px solid rgba(255,211,102,.4);color:var(--gold);}
 .q-dir{font-size:.72rem;color:var(--muted);}
-.q-text{font-size:1.9rem;font-weight:800;color:var(--white);line-height:1.2;word-break:break-word;}
-.q-feedback{font-size:.84rem;min-height:20px;}
+.q-text{font-size:1.8rem;font-weight:800;line-height:1.2;word-break:break-word;}
+.q-feedback{font-size:.84rem;min-height:20px;font-weight:600;}
 .q-feedback.ok{color:var(--green);}
 .q-feedback.err{color:var(--red);}
 .q-remain{font-size:.72rem;color:var(--muted);}
 
-.input-row{width:100%;display:flex;gap:8px;}
-.answer-input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:12px;
-  padding:14px 18px;font-size:1rem;color:var(--white);outline:none;font-family:inherit;
-  transition:border-color .15s,box-shadow .15s;}
-.answer-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--pg);}
-.answer-input.shake{animation:shake .35s ease;}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-.answer-input::placeholder{color:var(--muted);}
-.submit-btn{background:var(--primary);border:none;border-radius:12px;padding:14px 18px;
-  color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all .15s;flex-shrink:0;}
-.submit-btn:hover{background:#9080ff;transform:translateY(-1px);}
+/* 5-CHOICE BUTTONS */
+.choices-wrap{width:100%;display:flex;flex-direction:column;gap:9px;}
+.choice-btn{width:100%;padding:13px 18px;text-align:left;background:rgba(255,255,255,.13);
+  border:1.5px solid rgba(255,255,255,.28);border-radius:14px;color:var(--text);
+  font-size:.92rem;font-family:inherit;cursor:pointer;transition:all .15s;
+  backdrop-filter:blur(8px);display:flex;align-items:center;gap:10px;}
+.choice-btn:hover:not(:disabled){background:rgba(255,255,255,.24);border-color:rgba(255,255,255,.55);
+  transform:translateX(3px);}
+.choice-btn .ch-label{font-weight:800;font-size:.8rem;width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.choice-btn .ch-text{flex:1;}
+.choice-btn.correct{background:rgba(45,224,165,.3);border-color:var(--green);box-shadow:0 0 16px rgba(45,224,165,.25);}
+.choice-btn.correct .ch-label{background:var(--green);color:#000;}
+.choice-btn.wrong{background:rgba(255,92,110,.25);border-color:var(--red);}
+.choice-btn.wrong .ch-label{background:var(--red);color:#fff;}
+.choice-btn.eliminated{opacity:.3;pointer-events:none;}
+.choice-btn:disabled{cursor:default;}
 
 .action-row{width:100%;display:flex;gap:8px;justify-content:space-between;align-items:center;}
-.sm-btn{background:none;border:1px solid var(--border);border-radius:20px;padding:6px 13px;
-  font-size:.76rem;color:var(--muted);cursor:pointer;transition:all .15s;}
-.sm-btn:hover{border-color:var(--gold);color:var(--gold);}
+.sm-btn{background:rgba(255,255,255,.12);border:1px solid var(--border);border-radius:20px;padding:6px 13px;
+  font-size:.76rem;color:var(--text);cursor:pointer;transition:all .15s;backdrop-filter:blur(6px);}
+.sm-btn:hover{background:rgba(255,255,255,.22);}
 .sm-btn.danger:hover{border-color:var(--red);color:var(--red);}
-.sm-btn.analysis-btn{border-color:rgba(124,111,255,.3);color:var(--primary);}
-.sm-btn.analysis-btn:hover{border-color:var(--primary);background:rgba(124,111,255,.1);}
 
 .stat-row{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
+.stat-pill{background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:10px;
+  padding:10px 6px;text-align:center;backdrop-filter:blur(6px);}
 .stat-pill .sv{font-size:1.15rem;font-weight:800;}
 .stat-pill .sl{font-size:.67rem;color:var(--muted);margin-top:2px;}
 .sv.c{color:var(--green);}
@@ -175,93 +186,107 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .week-bar{width:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 .day-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
 .day-label{font-size:.65rem;color:var(--muted);}
-.day-dot{width:100%;aspect-ratio:1;border-radius:8px;background:var(--surface);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--muted);}
-.day-dot.has{background:rgba(124,111,255,.18);border-color:var(--primary);color:var(--primary);}
-.day-dot.today{border-color:var(--gold);color:var(--gold);background:rgba(255,207,64,.1);}
+.day-dot{width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.1);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--muted);}
+.day-dot.has{background:rgba(110,231,255,.2);border-color:var(--primary);color:var(--primary);}
+.day-dot.today{border-color:var(--gold);color:var(--gold);background:rgba(255,209,102,.15);}
 .rec-list{width:100%;display:flex;flex-direction:column;gap:8px;}
-.rec-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px 16px;display:flex;align-items:center;gap:12px;}
+.rec-item{padding:14px 16px;display:flex;align-items:center;gap:12px;}
 .rec-item .ri-grade{font-size:1.5rem;flex-shrink:0;}
 .rec-item .ri-info{flex:1;}
-.rec-item .ri-info h4{font-size:.88rem;font-weight:700;color:var(--white);}
+.rec-item .ri-info h4{font-size:.88rem;font-weight:700;}
 .rec-item .ri-info p{font-size:.74rem;color:var(--muted);margin-top:2px;}
 .rec-item .ri-score{font-size:1rem;font-weight:800;color:var(--gold);}
 
-/* ANALYSIS SCREEN */
-.analysis-header{width:100%;background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:20px;text-align:center;}
-.analysis-header h2{font-size:1.2rem;font-weight:800;color:var(--white);margin-bottom:6px;}
+/* RANKING SCREEN */
+.rank-table{width:100%;display:flex;flex-direction:column;gap:8px;}
+.rank-row{padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .15s;}
+.rank-row.me{border-color:var(--gold);background:rgba(255,209,102,.15);}
+.rank-num{font-size:1.1rem;font-weight:900;width:28px;text-align:center;flex-shrink:0;}
+.rank-num.top1{color:var(--gold);}
+.rank-num.top2{color:#c0c0c0;}
+.rank-num.top3{color:#cd7f32;}
+.rank-name{flex:1;font-weight:700;font-size:.9rem;}
+.rank-score{font-size:.95rem;font-weight:800;color:var(--gold);}
+.rank-acc{font-size:.72rem;color:var(--muted);text-align:right;}
+
+/* ANALYSIS */
+.analysis-header{width:100%;padding:20px;text-align:center;}
+.analysis-header h2{font-size:1.2rem;font-weight:800;margin-bottom:6px;}
 .analysis-header p{font-size:.82rem;color:var(--muted);}
 .rank-big{font-size:3.5rem;font-weight:900;margin:8px 0 4px;}
 .rank-msg{font-size:.9rem;font-weight:600;}
-
 .analysis-stats{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.an-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px 8px;text-align:center;}
+.an-stat{padding:14px 8px;text-align:center;}
 .an-stat .av{font-size:1.4rem;font-weight:800;}
 .an-stat .al{font-size:.7rem;color:var(--muted);margin-top:3px;}
-
-.diagnosis-card{width:100%;background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:18px 20px;}
-.diagnosis-card h3{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;
-  color:var(--muted);margin-bottom:12px;}
-.diagnosis-text{font-size:.88rem;line-height:1.7;color:var(--text);}
-
-.word-section{width:100%;background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:18px 20px;}
-.word-section h3{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;
-  color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.word-section h3 span{font-size:.9rem;}
+.diagnosis-card{width:100%;padding:18px 20px;}
+.diagnosis-card h3{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:12px;}
+.diagnosis-text{font-size:.88rem;line-height:1.7;}
+.word-section{width:100%;padding:18px 20px;}
+.word-section h3{font-size:.78rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .word-chips{display:flex;flex-wrap:wrap;gap:7px;}
 .word-chip{padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:600;}
-.chip-strong{background:rgba(0,224,160,.1);color:var(--green);border:1px solid rgba(0,224,160,.25);}
-.chip-weak{background:rgba(255,77,106,.1);color:var(--red);border:1px solid rgba(255,77,106,.25);}
-.chip-review{background:rgba(255,171,79,.1);color:var(--orange);border:1px solid rgba(255,171,79,.25);}
+.chip-strong{background:rgba(45,224,165,.15);color:var(--green);border:1px solid rgba(45,224,165,.3);}
+.chip-weak{background:rgba(255,92,110,.15);color:var(--red);border:1px solid rgba(255,92,110,.3);}
+.chip-review{background:rgba(255,179,71,.15);color:var(--orange);border:1px solid rgba(255,179,71,.3);}
 .no-words{font-size:.82rem;color:var(--muted);font-style:italic;}
-
 .bar-wrap{width:100%;display:flex;flex-direction:column;gap:8px;}
 .bar-row{display:flex;align-items:center;gap:10px;}
-.bar-label{font-size:.78rem;color:var(--text);width:60px;flex-shrink:0;text-align:right;}
-.bar-track{flex:1;height:10px;background:var(--surface);border-radius:10px;overflow:hidden;}
+.bar-label{font-size:.78rem;width:60px;flex-shrink:0;text-align:right;color:var(--text);}
+.bar-track{flex:1;height:10px;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:10px;transition:width .6s ease;}
 .bar-val{font-size:.78rem;font-weight:700;width:36px;flex-shrink:0;}
 
 /* OVERLAYS */
-.overlay{position:fixed;inset:0;z-index:100;background:rgba(11,11,24,.92);
-  backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;}
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(5,25,50,.85);
+  backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;}
 .overlay.show{display:flex;}
-.ov-card{background:var(--card);border:1.5px solid var(--primary);border-radius:22px;
-  padding:36px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;
-  gap:11px;box-shadow:0 0 60px var(--pg);width:100%;max-width:400px;
+.ov-card{background:rgba(20,60,110,.9);border:1.5px solid rgba(110,231,255,.5);border-radius:22px;
+  padding:34px 26px;text-align:center;display:flex;flex-direction:column;align-items:center;
+  gap:11px;box-shadow:0 0 60px rgba(110,231,255,.3);width:100%;max-width:400px;
   animation:clearPop .4s cubic-bezier(.34,1.56,.64,1);}
 @keyframes clearPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-.ov-emoji{font-size:3.6rem;}
-.ov-title{font-size:1.6rem;font-weight:900;color:var(--white);}
-.ov-rank{font-size:3rem;font-weight:900;line-height:1;}
+.ov-emoji{font-size:3.4rem;}
+.ov-title{font-size:1.5rem;font-weight:900;}
+.ov-rank{font-size:2.8rem;font-weight:900;line-height:1;}
 .ov-sub{font-size:.82rem;color:var(--muted);line-height:1.7;}
 .ov-score{font-size:2rem;font-weight:900;color:var(--gold);}
 .ov-divider{width:100%;height:1px;background:var(--border);}
 .ov-stat-row{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.ov-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
+.ov-stat{background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
 .ov-stat .os{font-size:1.1rem;font-weight:800;}
 .ov-stat .ol{font-size:.68rem;color:var(--muted);margin-top:2px;}
 .ov-btn{border:none;border-radius:12px;padding:13px;font-size:.92rem;font-weight:700;
   color:#fff;cursor:pointer;transition:all .15s;width:100%;}
-.ov-btn.pri{background:linear-gradient(135deg,var(--primary),#5a50d0);box-shadow:0 4px 16px var(--pg);}
-.ov-btn.pri:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--pg);}
-.ov-btn.sec2{background:var(--card2);border:1px solid var(--border);color:var(--muted);}
-.ov-btn.sec2:hover{border-color:var(--primary);color:var(--white);}
+.ov-btn.pri{background:linear-gradient(135deg,#3a8fd4,#1a5aa0);box-shadow:0 4px 16px rgba(58,143,212,.4);}
+.ov-btn.pri:hover{transform:translateY(-2px);}
+.ov-btn.sec2{background:rgba(255,255,255,.1);border:1px solid var(--border);color:var(--muted);}
+.ov-btn.sec2:hover{background:rgba(255,255,255,.2);color:#fff;}
 
-/* MILESTONE TOAST */
-.milestone-toast{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);
-  z-index:200;background:linear-gradient(135deg,var(--primary),var(--sec));
+/* NAME MODAL */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(5,20,45,.9);
+  backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal.show{display:flex;}
+.modal-card{background:rgba(20,60,110,.95);border:1.5px solid rgba(110,231,255,.5);
+  border-radius:22px;padding:34px 28px;text-align:center;width:100%;max-width:360px;
+  display:flex;flex-direction:column;gap:14px;animation:clearPop .35s ease;}
+.modal-card h2{font-size:1.3rem;font-weight:900;}
+.modal-card p{font-size:.84rem;color:var(--muted);}
+.name-input{background:rgba(255,255,255,.15);border:1.5px solid var(--border);border-radius:12px;
+  padding:13px 16px;font-size:1rem;color:#fff;outline:none;font-family:inherit;width:100%;text-align:center;}
+.name-input::placeholder{color:rgba(255,255,255,.4);}
+.name-input:focus{border-color:var(--primary);}
+
+/* TOAST */
+.milestone-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);
+  z-index:300;background:linear-gradient(135deg,#1a7ac4,var(--primary));
   color:#fff;font-size:.95rem;font-weight:800;padding:14px 28px;border-radius:30px;
-  box-shadow:0 8px 32px rgba(124,111,255,.5);text-align:center;
+  box-shadow:0 8px 32px rgba(110,231,255,.4);text-align:center;
   transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s ease;
-  opacity:0;pointer-events:none;white-space:nowrap;max-width:90vw;
-}
+  opacity:0;pointer-events:none;white-space:nowrap;max-width:90vw;}
 .milestone-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .milestone-toast.hide{transform:translateX(-50%) translateY(-80px);opacity:0;}
 
@@ -274,17 +299,23 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   .grade-grid{grid-template-columns:1fr 1fr;}
   .mix-strip{grid-template-columns:1fr;}
   .mix-card.all{grid-column:auto;}
-  .q-text{font-size:1.5rem;}
-  .logo h1{font-size:1.7rem;}
+  .q-text{font-size:1.45rem;}
+  .logo h1{font-size:1.8rem;}
   .stat-row{grid-template-columns:1fr 1fr;}
   .today-stats{grid-template-columns:1fr 1fr;}
   .analysis-stats{grid-template-columns:1fr 1fr;}
-  .milestone-toast{font-size:.85rem;padding:12px 20px;}
+  .choice-btn{font-size:.85rem;padding:11px 14px;}
 }
 </style>
 </head>
 <body>
-<div class="bg-glow"></div>
+<div class="bubbles" id="bubbles"></div>
+<div class="ocean-glow"></div>
+<svg class="seaweed" viewBox="0 0 660 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0,80 Q20,40 40,60 Q60,80 80,50 Q100,20 120,45 Q140,70 160,55 Q180,40 200,60 Q220,80 240,65 Q260,50 280,70 Q300,90 320,60 Q340,30 360,55 Q380,80 400,65 Q420,50 440,70 Q460,90 480,60 Q500,30 520,55 Q540,80 560,65 Q580,50 600,70 Q620,90 640,60 Q650,40 660,50 L660,80 Z" fill="rgba(0,100,60,.35)"/>
+  <path d="M0,80 Q30,55 60,70 Q90,85 120,65 Q150,45 180,68 Q210,85 240,72 Q270,58 300,75 Q330,85 360,68 Q390,50 420,72 Q450,85 480,68 Q510,50 540,72 Q570,85 600,70 Q630,55 660,68 L660,80 Z" fill="rgba(0,80,50,.4)"/>
+</svg>
+
 <div class="app">
 
 <!-- ══ HOME ══ -->
@@ -292,33 +323,36 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   <div class="logo">
     <div class="sub-name">JS song's</div>
     <h1>WORD QUEST</h1>
-    <p>영어 단어 · 숙어 타이핑 퀴즈 — 중3 ~ 고3</p>
+    <p>영어 단어 · 숙어 5지선다 퀴즈 — 중3 ~ 고3</p>
   </div>
   <div class="sec-lbl">학년별 학습 (학년별 100단어)</div>
   <div class="grade-grid" id="grade-grid"></div>
   <div class="sec-lbl">종합 모드</div>
   <div class="mix-strip">
-    <div class="mix-card" onclick="startGame('en-ko',null)">
+    <div class="mix-card glass" onclick="startGame('en-ko',null)">
       <div class="icon">🔤</div><div><h3>전체 영어→한글</h3><p>전체 단어 중 100개 랜덤</p></div>
     </div>
-    <div class="mix-card" onclick="startGame('ko-en',null)">
+    <div class="mix-card glass" onclick="startGame('ko-en',null)">
       <div class="icon">🇰🇷</div><div><h3>전체 한글→영어</h3><p>전체 단어 중 100개 랜덤</p></div>
     </div>
-    <div class="mix-card" onclick="startGame('idiom-en-ko',null)">
+    <div class="mix-card glass" onclick="startGame('idiom-en-ko',null)">
       <div class="icon">💬</div><div><h3>숙어 영어→한글</h3><p>필수 숙어 50개 전체</p></div>
     </div>
-    <div class="mix-card" onclick="startGame('idiom-ko-en',null)">
+    <div class="mix-card glass" onclick="startGame('idiom-ko-en',null)">
       <div class="icon">🗣️</div><div><h3>숙어 한글→영어</h3><p>필수 숙어 50개 전체</p></div>
     </div>
-    <div class="mix-card all" onclick="startGame('all',null)">
+    <div class="mix-card all glass" onclick="startGame('all',null)">
       <div class="icon">⚡</div><div><h3>전체 종합 모드</h3><p>단어+숙어 · 영한+한영 · 학년별 25개씩 100개</p></div>
     </div>
   </div>
-  <div class="today-card" id="today-card">
+  <div class="today-card glass" id="today-card">
     <h3>📅 오늘의 학습 기록 <span id="today-date-lbl" style="color:var(--primary)"></span></h3>
     <div id="today-body"></div>
   </div>
-  <button class="sm-btn" style="align-self:flex-end" onclick="goRecords()">📊 전체 기록</button>
+  <div style="width:100%;display:flex;gap:10px;justify-content:flex-end;">
+    <button class="sm-btn" onclick="goRanking()">🏆 랭킹</button>
+    <button class="sm-btn" onclick="goRecords()">📊 전체 기록</button>
+  </div>
 </div>
 
 <!-- ══ GRADE MODE SELECT ══ -->
@@ -329,10 +363,9 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <div class="nav-sp"></div>
   </div>
   <div class="grade-header">
-    <div class="grade-big" id="grade-big-badge"></div>
+    <div class="grade-big glass" id="grade-big-badge"></div>
     <p id="grade-sub-p"></p>
   </div>
-  <div class="sec-lbl">학습 모드 선택</div>
   <div class="mode-list" id="mode-list"></div>
 </div>
 
@@ -344,38 +377,36 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <div class="nav-sp"></div>
   </div>
   <div class="hud">
-    <div class="hud-pill hud-stage" id="hud-stage">STAGE 1</div>
-    <div class="hud-pill hud-grade" id="hud-grade"></div>
-    <div class="hud-pill hud-score">⭐ <span id="hud-score">0</span></div>
+    <span class="hud-pill hud-stage" id="hud-stage">STAGE 1</span>
+    <span class="hud-pill" id="hud-grade"></span>
+    <span class="hud-pill hud-score" id="hud-score">0</span>
   </div>
   <div class="prog-wrap">
-    <div class="prog-meta">
-      <span id="prog-l">100개 완주 도전!</span>
-      <span class="pg-right" id="prog-r">0 / 100 완료</span>
-    </div>
+    <div class="prog-meta"><span id="prog-l"></span><span class="pg-right" id="prog-r"></span></div>
     <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
   <div class="streak-row" id="streak-row"></div>
-  <div class="q-card" id="q-card">
+  <div class="q-card glass" id="q-card">
     <div class="q-top">
       <span class="q-lv-badge" id="q-lv-badge">중3</span>
+      <span class="pos-badge" id="q-pos-badge">명사</span>
       <span class="q-dir" id="q-dir">영어 → 한글</span>
     </div>
-    <div class="q-text" id="q-text">—</div>
+    <div class="q-text" id="q-text"></div>
     <div class="q-feedback" id="q-feedback"></div>
     <div class="q-remain" id="q-remain"></div>
   </div>
-  <div class="input-row">
-    <input class="answer-input" id="answer-input" type="text"
-      placeholder="정답을 입력하고 Enter" autocomplete="off" autocorrect="off" spellcheck="false">
-    <button class="submit-btn" onclick="submitAnswer()">확인</button>
+  <div class="choices-wrap" id="choices-wrap">
+    <button class="choice-btn" id="ch0" onclick="selectChoice(0)"><span class="ch-label">A</span><span class="ch-text" id="cht0"></span></button>
+    <button class="choice-btn" id="ch1" onclick="selectChoice(1)"><span class="ch-label">B</span><span class="ch-text" id="cht1"></span></button>
+    <button class="choice-btn" id="ch2" onclick="selectChoice(2)"><span class="ch-label">C</span><span class="ch-text" id="cht2"></span></button>
+    <button class="choice-btn" id="ch3" onclick="selectChoice(3)"><span class="ch-label">D</span><span class="ch-text" id="cht3"></span></button>
+    <button class="choice-btn" id="ch4" onclick="selectChoice(4)"><span class="ch-label">E</span><span class="ch-text" id="cht4"></span></button>
   </div>
   <div class="action-row">
-    <div style="display:flex;gap:8px;">
-      <button class="sm-btn" id="hint-btn" onclick="useHint()">💡 힌트</button>
-      <button class="sm-btn danger" onclick="skipQ()">건너뛰기</button>
-    </div>
-    <button class="sm-btn analysis-btn" onclick="showAnalysis(true)">📊 현재 분석</button>
+    <button class="sm-btn" id="hint-btn" onclick="useHint()">💡 힌트 (오답 2개 제거)</button>
+    <button class="sm-btn" onclick="showAnalysis(true)">📊 분석</button>
+    <button class="sm-btn danger" onclick="endSession()">나가기</button>
   </div>
   <div class="stat-row">
     <div class="stat-pill"><div class="sv c" id="s-c">0</div><div class="sl">정답</div></div>
@@ -397,6 +428,21 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   <div class="rec-list" id="rec-list"></div>
 </div>
 
+<!-- ══ RANKING ══ -->
+<div class="screen" id="sc-ranking">
+  <div class="nav-bar">
+    <button class="nav-back" onclick="goHome()">← 홈</button>
+    <div class="nav-t">🏆 랭킹</div>
+    <div class="nav-sp"></div>
+  </div>
+  <div class="glass" style="width:100%;padding:16px 20px;text-align:center;">
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:4px;">내 이름</div>
+    <div style="font-size:1.1rem;font-weight:800;" id="my-name-lbl"></div>
+    <button class="sm-btn" style="margin-top:8px;" onclick="changeName()">이름 변경</button>
+  </div>
+  <div class="rank-table" id="rank-table"></div>
+</div>
+
 <!-- ══ ANALYSIS ══ -->
 <div class="screen" id="sc-analysis">
   <div class="nav-bar">
@@ -404,37 +450,37 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <div class="nav-t">학습 진단</div>
     <div class="nav-sp"></div>
   </div>
-  <div class="analysis-header">
+  <div class="analysis-header glass">
     <div class="rank-big" id="an-rank">B</div>
     <div class="rank-msg" id="an-rank-msg">잘하고 있어요!</div>
     <h2 id="an-title" style="margin-top:10px"></h2>
     <p id="an-subtitle"></p>
   </div>
   <div class="analysis-stats">
-    <div class="an-stat"><div class="av" style="color:var(--green)" id="an-correct">0</div><div class="al">정답</div></div>
-    <div class="an-stat"><div class="av" style="color:var(--red)" id="an-wrong">0</div><div class="al">오답</div></div>
-    <div class="an-stat"><div class="av" style="color:var(--primary)" id="an-acc">0%</div><div class="al">정확도</div></div>
-    <div class="an-stat"><div class="av" style="color:var(--gold)" id="an-cleared">0</div><div class="al">완료 단어</div></div>
-    <div class="an-stat"><div class="av" style="color:var(--orange)" id="an-streak">0</div><div class="al">최대 연속</div></div>
-    <div class="an-stat"><div class="av" style="color:var(--sec)" id="an-score">0</div><div class="al">총점</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--green)" id="an-correct">0</div><div class="al">정답</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--red)" id="an-wrong">0</div><div class="al">오답</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--primary)" id="an-acc">0%</div><div class="al">정확도</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--gold)" id="an-cleared">0</div><div class="al">완료 단어</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--orange)" id="an-streak">0</div><div class="al">최대 연속</div></div>
+    <div class="an-stat glass"><div class="av" style="color:var(--sec)" id="an-score">0</div><div class="al">총점</div></div>
   </div>
-  <div class="diagnosis-card">
+  <div class="diagnosis-card glass">
     <h3>🔍 강약점 진단</h3>
     <div class="diagnosis-text" id="an-diagnosis"></div>
   </div>
-  <div class="word-section" id="an-weak-section">
+  <div class="word-section glass" id="an-weak-section">
     <h3><span>⚠️</span> 취약 단어 (2회 이상 오답)</h3>
     <div class="word-chips" id="an-weak-words"></div>
   </div>
-  <div class="word-section" id="an-review-section">
+  <div class="word-section glass" id="an-review-section">
     <h3><span>🔄</span> 복습 필요 (1회 오답)</h3>
     <div class="word-chips" id="an-review-words"></div>
   </div>
-  <div class="word-section">
+  <div class="word-section glass">
     <h3><span>💪</span> 강점 단어 (첫 번에 정답)</h3>
     <div class="word-chips" id="an-strong-words"></div>
   </div>
-  <div class="word-section">
+  <div class="word-section glass">
     <h3><span>📈</span> 정확도 분포</h3>
     <div class="bar-wrap" id="an-bar-wrap"></div>
   </div>
@@ -462,229 +508,230 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   </div>
 </div>
 
-<!-- MILESTONE TOAST -->
-<div class="milestone-toast" id="milestone-toast"></div>
+<!-- ══ NAME MODAL ══ -->
+<div class="modal" id="name-modal">
+  <div class="modal-card">
+    <div style="font-size:2.5rem">🌊</div>
+    <h2>이름을 입력해주세요</h2>
+    <p>랭킹 등록에 사용됩니다</p>
+    <input class="name-input" id="name-input" type="text" maxlength="10" placeholder="닉네임 (최대 10자)">
+    <button class="ov-btn pri" onclick="saveName()">시작하기</button>
+  </div>
+</div>
 
-</div><!-- /app -->
+<div class="milestone-toast" id="milestone-toast"></div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
-//  WORD DATA — 100개 per grade (필수 단어)
+//  WORD DATA — pos: n=명사 v=동사 adj=형용사 adv=부사
 // ═══════════════════════════════════════════
-const POOL = {
+const POS_KO={n:"명사",v:"동사",adj:"형용사",adv:"부사",idiom:"숙어"};
+const POOL={
 mid3:[
-  {en:"ability",ko:"능력"},{en:"absence",ko:"결석, 부재"},{en:"accept",ko:"받아들이다"},
-  {en:"achieve",ko:"달성하다, 이루다"},{en:"action",ko:"행동"},{en:"add",ko:"더하다, 추가하다"},
-  {en:"admit",ko:"인정하다"},{en:"adult",ko:"어른, 성인"},{en:"afraid",ko:"두려운"},
-  {en:"agree",ko:"동의하다"},{en:"allow",ko:"허락하다"},{en:"alone",ko:"혼자, 외로운"},
-  {en:"ancient",ko:"고대의"},{en:"angry",ko:"화난"},{en:"announce",ko:"발표하다, 알리다"},
-  {en:"appear",ko:"나타나다, 보이다"},{en:"argue",ko:"논쟁하다"},{en:"attention",ko:"주의, 관심"},
-  {en:"attitude",ko:"태도, 자세"},{en:"avoid",ko:"피하다"},{en:"basic",ko:"기본적인"},
-  {en:"believe",ko:"믿다"},{en:"blame",ko:"비난하다, 탓하다"},{en:"brave",ko:"용감한"},
-  {en:"breathe",ko:"숨쉬다"},{en:"build",ko:"짓다, 만들다"},{en:"busy",ko:"바쁜"},
-  {en:"calm",ko:"침착한, 고요한"},{en:"careful",ko:"조심스러운"},{en:"cause",ko:"원인, 야기하다"},
-  {en:"certain",ko:"확실한"},{en:"chance",ko:"기회, 가능성"},{en:"change",ko:"변화, 바꾸다"},
-  {en:"choice",ko:"선택"},{en:"clear",ko:"명확한, 맑은"},{en:"collect",ko:"모으다, 수집하다"},
-  {en:"comfort",ko:"위안, 편안함"},{en:"common",ko:"흔한, 공통의"},{en:"compare",ko:"비교하다"},
-  {en:"complete",ko:"완성하다, 완전한"},{en:"consider",ko:"고려하다"},{en:"contain",ko:"포함하다"},
-  {en:"continue",ko:"계속하다"},{en:"control",ko:"통제하다"},{en:"correct",ko:"올바른, 수정하다"},
-  {en:"courage",ko:"용기"},{en:"create",ko:"만들다, 창조하다"},{en:"curious",ko:"호기심 있는"},
-  {en:"damage",ko:"손상, 피해"},{en:"danger",ko:"위험"},{en:"decide",ko:"결정하다"},
-  {en:"describe",ko:"묘사하다, 설명하다"},{en:"different",ko:"다른, 다양한"},{en:"discover",ko:"발견하다"},
-  {en:"discuss",ko:"토론하다"},{en:"dream",ko:"꿈, 꿈꾸다"},{en:"effort",ko:"노력"},
-  {en:"energy",ko:"에너지, 활력"},{en:"enjoy",ko:"즐기다"},{en:"environment",ko:"환경"},
-  {en:"example",ko:"예, 본보기"},{en:"experience",ko:"경험"},{en:"explain",ko:"설명하다"},
-  {en:"express",ko:"표현하다"},{en:"fail",ko:"실패하다"},{en:"fair",ko:"공정한"},
-  {en:"familiar",ko:"친숙한"},{en:"famous",ko:"유명한"},{en:"force",ko:"힘, 강요하다"},
-  {en:"forget",ko:"잊다"},{en:"friendly",ko:"친근한, 우호적인"},{en:"grow",ko:"자라다, 성장하다"},
-  {en:"guide",ko:"안내하다, 안내자"},{en:"habit",ko:"습관"},{en:"happen",ko:"일어나다, 발생하다"},
-  {en:"healthy",ko:"건강한"},{en:"helpful",ko:"도움이 되는"},{en:"honest",ko:"솔직한, 정직한"},
-  {en:"hope",ko:"희망, 바라다"},{en:"improve",ko:"향상시키다"},{en:"include",ko:"포함하다"},
-  {en:"increase",ko:"증가하다"},{en:"interest",ko:"관심, 흥미"},{en:"invite",ko:"초대하다"},
-  {en:"join",ko:"참가하다"},{en:"keep",ko:"유지하다, 보관하다"},{en:"knowledge",ko:"지식"},
-  {en:"learn",ko:"배우다"},{en:"limit",ko:"한계, 제한하다"},{en:"listen",ko:"듣다"},
-  {en:"lose",ko:"잃다, 지다"},{en:"manage",ko:"관리하다"},{en:"matter",ko:"문제, 중요하다"},
-  {en:"memory",ko:"기억"},{en:"mistake",ko:"실수"},{en:"nature",ko:"자연"},
-  {en:"prepare",ko:"준비하다"},{en:"problem",ko:"문제"},{en:"respect",ko:"존중하다"},
-  {en:"understand",ko:"이해하다"}
+  {en:"ability",ko:"능력",pos:"n"},{en:"absence",ko:"결석, 부재",pos:"n"},{en:"accept",ko:"받아들이다",pos:"v"},
+  {en:"achieve",ko:"달성하다, 이루다",pos:"v"},{en:"action",ko:"행동",pos:"n"},{en:"add",ko:"더하다, 추가하다",pos:"v"},
+  {en:"admit",ko:"인정하다",pos:"v"},{en:"adult",ko:"어른, 성인",pos:"n"},{en:"afraid",ko:"두려운",pos:"adj"},
+  {en:"agree",ko:"동의하다",pos:"v"},{en:"allow",ko:"허락하다",pos:"v"},{en:"alone",ko:"혼자, 외로운",pos:"adj"},
+  {en:"ancient",ko:"고대의",pos:"adj"},{en:"angry",ko:"화난",pos:"adj"},{en:"announce",ko:"발표하다, 알리다",pos:"v"},
+  {en:"appear",ko:"나타나다, 보이다",pos:"v"},{en:"argue",ko:"논쟁하다",pos:"v"},{en:"attention",ko:"주의, 관심",pos:"n"},
+  {en:"attitude",ko:"태도, 자세",pos:"n"},{en:"avoid",ko:"피하다",pos:"v"},{en:"basic",ko:"기본적인",pos:"adj"},
+  {en:"believe",ko:"믿다",pos:"v"},{en:"blame",ko:"비난하다, 탓하다",pos:"v"},{en:"brave",ko:"용감한",pos:"adj"},
+  {en:"breathe",ko:"숨쉬다",pos:"v"},{en:"build",ko:"짓다, 만들다",pos:"v"},{en:"busy",ko:"바쁜",pos:"adj"},
+  {en:"calm",ko:"침착한, 고요한",pos:"adj"},{en:"careful",ko:"조심스러운",pos:"adj"},{en:"cause",ko:"원인, 야기하다",pos:"n"},
+  {en:"certain",ko:"확실한",pos:"adj"},{en:"chance",ko:"기회, 가능성",pos:"n"},{en:"change",ko:"변화, 바꾸다",pos:"n"},
+  {en:"choice",ko:"선택",pos:"n"},{en:"clear",ko:"명확한, 맑은",pos:"adj"},{en:"collect",ko:"모으다, 수집하다",pos:"v"},
+  {en:"comfort",ko:"위안, 편안함",pos:"n"},{en:"common",ko:"흔한, 공통의",pos:"adj"},{en:"compare",ko:"비교하다",pos:"v"},
+  {en:"complete",ko:"완성하다, 완전한",pos:"v"},{en:"consider",ko:"고려하다",pos:"v"},{en:"contain",ko:"포함하다",pos:"v"},
+  {en:"continue",ko:"계속하다",pos:"v"},{en:"control",ko:"통제하다",pos:"v"},{en:"correct",ko:"올바른, 수정하다",pos:"adj"},
+  {en:"courage",ko:"용기",pos:"n"},{en:"create",ko:"만들다, 창조하다",pos:"v"},{en:"curious",ko:"호기심 있는",pos:"adj"},
+  {en:"damage",ko:"손상, 피해",pos:"n"},{en:"danger",ko:"위험",pos:"n"},{en:"decide",ko:"결정하다",pos:"v"},
+  {en:"describe",ko:"묘사하다, 설명하다",pos:"v"},{en:"different",ko:"다른, 다양한",pos:"adj"},{en:"discover",ko:"발견하다",pos:"v"},
+  {en:"discuss",ko:"토론하다",pos:"v"},{en:"dream",ko:"꿈, 꿈꾸다",pos:"n"},{en:"effort",ko:"노력",pos:"n"},
+  {en:"energy",ko:"에너지, 활력",pos:"n"},{en:"enjoy",ko:"즐기다",pos:"v"},{en:"environment",ko:"환경",pos:"n"},
+  {en:"example",ko:"예, 본보기",pos:"n"},{en:"experience",ko:"경험",pos:"n"},{en:"explain",ko:"설명하다",pos:"v"},
+  {en:"express",ko:"표현하다",pos:"v"},{en:"fail",ko:"실패하다",pos:"v"},{en:"fair",ko:"공정한",pos:"adj"},
+  {en:"familiar",ko:"친숙한",pos:"adj"},{en:"famous",ko:"유명한",pos:"adj"},{en:"force",ko:"힘, 강요하다",pos:"n"},
+  {en:"forget",ko:"잊다",pos:"v"},{en:"friendly",ko:"친근한, 우호적인",pos:"adj"},{en:"grow",ko:"자라다, 성장하다",pos:"v"},
+  {en:"guide",ko:"안내하다, 안내자",pos:"v"},{en:"habit",ko:"습관",pos:"n"},{en:"happen",ko:"일어나다, 발생하다",pos:"v"},
+  {en:"healthy",ko:"건강한",pos:"adj"},{en:"helpful",ko:"도움이 되는",pos:"adj"},{en:"honest",ko:"솔직한, 정직한",pos:"adj"},
+  {en:"hope",ko:"희망, 바라다",pos:"n"},{en:"improve",ko:"향상시키다",pos:"v"},{en:"include",ko:"포함하다",pos:"v"},
+  {en:"increase",ko:"증가하다",pos:"v"},{en:"interest",ko:"관심, 흥미",pos:"n"},{en:"invite",ko:"초대하다",pos:"v"},
+  {en:"join",ko:"참가하다",pos:"v"},{en:"keep",ko:"유지하다, 보관하다",pos:"v"},{en:"knowledge",ko:"지식",pos:"n"},
+  {en:"learn",ko:"배우다",pos:"v"},{en:"limit",ko:"한계, 제한하다",pos:"n"},{en:"listen",ko:"듣다",pos:"v"},
+  {en:"lose",ko:"잃다, 지다",pos:"v"},{en:"manage",ko:"관리하다",pos:"v"},{en:"matter",ko:"문제, 중요하다",pos:"n"},
+  {en:"memory",ko:"기억",pos:"n"},{en:"mistake",ko:"실수",pos:"n"},{en:"nature",ko:"자연",pos:"n"},
+  {en:"prepare",ko:"준비하다",pos:"v"},{en:"problem",ko:"문제",pos:"n"},{en:"respect",ko:"존중하다",pos:"v"},
+  {en:"understand",ko:"이해하다",pos:"v"}
 ],
 high1:[
-  {en:"abandon",ko:"버리다, 포기하다"},{en:"abundant",ko:"풍부한"},{en:"acknowledge",ko:"인정하다"},
-  {en:"adapt",ko:"적응하다, 개조하다"},{en:"adequate",ko:"적절한, 충분한"},{en:"advantage",ko:"이점, 유리함"},
-  {en:"alter",ko:"바꾸다, 변경하다"},{en:"ambiguous",ko:"모호한"},{en:"analyze",ko:"분석하다"},
-  {en:"anxious",ko:"불안한, 열망하는"},{en:"approach",ko:"접근하다, 접근법"},{en:"appropriate",ko:"적절한"},
-  {en:"arrange",ko:"배치하다, 준비하다"},{en:"assume",ko:"가정하다, 추정하다"},{en:"aware",ko:"인식하는"},
-  {en:"beneficial",ko:"이로운, 유익한"},{en:"burden",ko:"짐, 부담"},{en:"capture",ko:"포착하다, 잡다"},
-  {en:"challenge",ko:"도전, 도전하다"},{en:"classify",ko:"분류하다"},{en:"compete",ko:"경쟁하다"},
-  {en:"complicated",ko:"복잡한"},{en:"concentrate",ko:"집중하다"},{en:"conflict",ko:"충돌, 갈등"},
-  {en:"consequence",ko:"결과, 영향"},{en:"constant",ko:"지속적인, 일정한"},{en:"context",ko:"문맥, 상황"},
-  {en:"contribute",ko:"기여하다"},{en:"convince",ko:"설득하다"},{en:"cooperate",ko:"협력하다"},
-  {en:"crucial",ko:"결정적인, 중요한"},{en:"demand",ko:"요구하다"},{en:"demonstrate",ko:"시연하다, 증명하다"},
-  {en:"depend",ko:"의존하다"},{en:"determine",ko:"결정하다, 알아내다"},{en:"develop",ko:"발전시키다"},
-  {en:"disappear",ko:"사라지다"},{en:"distinguish",ko:"구별하다"},{en:"doubt",ko:"의심하다"},
-  {en:"enable",ko:"가능하게 하다"},{en:"encourage",ko:"격려하다"},{en:"ensure",ko:"보장하다"},
-  {en:"evaluate",ko:"평가하다"},{en:"examine",ko:"조사하다, 검토하다"},{en:"extend",ko:"연장하다, 확장하다"},
-  {en:"extreme",ko:"극단적인"},{en:"focus",ko:"집중하다, 초점"},{en:"generate",ko:"만들다, 발생시키다"},
-  {en:"identify",ko:"확인하다, 밝히다"},{en:"ignore",ko:"무시하다"},{en:"indicate",ko:"나타내다, 가리키다"},
-  {en:"influence",ko:"영향을 주다"},{en:"inform",ko:"알리다"},{en:"inspire",ko:"영감을 주다"},
-  {en:"integrate",ko:"통합하다"},{en:"interact",ko:"상호작용하다"},{en:"involve",ko:"포함하다, 관련되다"},
-  {en:"justify",ko:"정당화하다"},{en:"maintain",ko:"유지하다"},{en:"measure",ko:"측정하다"},
-  {en:"motivate",ko:"동기를 부여하다"},{en:"observe",ko:"관찰하다"},{en:"obtain",ko:"얻다, 획득하다"},
-  {en:"occur",ko:"발생하다"},{en:"overcome",ko:"극복하다"},{en:"participate",ko:"참여하다"},
-  {en:"perform",ko:"수행하다, 공연하다"},{en:"prevent",ko:"방지하다"},{en:"produce",ko:"생산하다"},
-  {en:"protect",ko:"보호하다"},{en:"provide",ko:"제공하다"},{en:"realize",ko:"깨닫다"},
-  {en:"recognize",ko:"인식하다, 알아보다"},{en:"reflect",ko:"반영하다, 반성하다"},{en:"reject",ko:"거부하다"},
-  {en:"relate",ko:"관련되다"},{en:"remain",ko:"남다, 여전히 ~이다"},{en:"require",ko:"요구하다"},
-  {en:"research",ko:"연구하다"},{en:"respond",ko:"반응하다, 응답하다"},{en:"reveal",ko:"드러내다"},
-  {en:"serve",ko:"봉사하다, 역할을 하다"},{en:"solve",ko:"해결하다"},{en:"suggest",ko:"제안하다"},
-  {en:"support",ko:"지지하다"},{en:"survive",ko:"생존하다"},{en:"transfer",ko:"이동시키다, 전달하다"},
-  {en:"transform",ko:"변형시키다"},{en:"vary",ko:"다양하다, 바뀌다"},{en:"vision",ko:"비전, 시력"},
-  {en:"apply",ko:"적용하다"},{en:"assert",ko:"주장하다"},{en:"contrast",ko:"대조하다"},
-  {en:"define",ko:"정의하다"},{en:"pursue",ko:"추구하다"},{en:"yield",ko:"생산하다, 양보하다"}
+  {en:"abandon",ko:"버리다, 포기하다",pos:"v"},{en:"abundant",ko:"풍부한",pos:"adj"},{en:"acknowledge",ko:"인정하다",pos:"v"},
+  {en:"adapt",ko:"적응하다, 개조하다",pos:"v"},{en:"adequate",ko:"적절한, 충분한",pos:"adj"},{en:"advantage",ko:"이점, 유리함",pos:"n"},
+  {en:"alter",ko:"바꾸다, 변경하다",pos:"v"},{en:"ambiguous",ko:"모호한",pos:"adj"},{en:"analyze",ko:"분석하다",pos:"v"},
+  {en:"anxious",ko:"불안한, 열망하는",pos:"adj"},{en:"approach",ko:"접근하다, 접근법",pos:"v"},{en:"appropriate",ko:"적절한",pos:"adj"},
+  {en:"arrange",ko:"배치하다, 준비하다",pos:"v"},{en:"assume",ko:"가정하다, 추정하다",pos:"v"},{en:"aware",ko:"인식하는",pos:"adj"},
+  {en:"beneficial",ko:"이로운, 유익한",pos:"adj"},{en:"burden",ko:"짐, 부담",pos:"n"},{en:"capture",ko:"포착하다, 잡다",pos:"v"},
+  {en:"challenge",ko:"도전, 도전하다",pos:"n"},{en:"classify",ko:"분류하다",pos:"v"},{en:"compete",ko:"경쟁하다",pos:"v"},
+  {en:"complicated",ko:"복잡한",pos:"adj"},{en:"concentrate",ko:"집중하다",pos:"v"},{en:"conflict",ko:"충돌, 갈등",pos:"n"},
+  {en:"consequence",ko:"결과, 영향",pos:"n"},{en:"constant",ko:"지속적인, 일정한",pos:"adj"},{en:"context",ko:"문맥, 상황",pos:"n"},
+  {en:"contribute",ko:"기여하다",pos:"v"},{en:"convince",ko:"설득하다",pos:"v"},{en:"cooperate",ko:"협력하다",pos:"v"},
+  {en:"crucial",ko:"결정적인, 중요한",pos:"adj"},{en:"demand",ko:"요구하다",pos:"v"},{en:"demonstrate",ko:"시연하다, 증명하다",pos:"v"},
+  {en:"depend",ko:"의존하다",pos:"v"},{en:"determine",ko:"결정하다, 알아내다",pos:"v"},{en:"develop",ko:"발전시키다",pos:"v"},
+  {en:"disappear",ko:"사라지다",pos:"v"},{en:"distinguish",ko:"구별하다",pos:"v"},{en:"doubt",ko:"의심하다",pos:"v"},
+  {en:"enable",ko:"가능하게 하다",pos:"v"},{en:"encourage",ko:"격려하다",pos:"v"},{en:"ensure",ko:"보장하다",pos:"v"},
+  {en:"evaluate",ko:"평가하다",pos:"v"},{en:"examine",ko:"조사하다, 검토하다",pos:"v"},{en:"extend",ko:"연장하다, 확장하다",pos:"v"},
+  {en:"extreme",ko:"극단적인",pos:"adj"},{en:"focus",ko:"집중하다, 초점",pos:"v"},{en:"generate",ko:"만들다, 발생시키다",pos:"v"},
+  {en:"identify",ko:"확인하다, 밝히다",pos:"v"},{en:"ignore",ko:"무시하다",pos:"v"},{en:"indicate",ko:"나타내다, 가리키다",pos:"v"},
+  {en:"influence",ko:"영향을 주다",pos:"v"},{en:"inform",ko:"알리다",pos:"v"},{en:"inspire",ko:"영감을 주다",pos:"v"},
+  {en:"integrate",ko:"통합하다",pos:"v"},{en:"interact",ko:"상호작용하다",pos:"v"},{en:"involve",ko:"포함하다, 관련되다",pos:"v"},
+  {en:"justify",ko:"정당화하다",pos:"v"},{en:"maintain",ko:"유지하다",pos:"v"},{en:"measure",ko:"측정하다",pos:"v"},
+  {en:"motivate",ko:"동기를 부여하다",pos:"v"},{en:"observe",ko:"관찰하다",pos:"v"},{en:"obtain",ko:"얻다, 획득하다",pos:"v"},
+  {en:"occur",ko:"발생하다",pos:"v"},{en:"overcome",ko:"극복하다",pos:"v"},{en:"participate",ko:"참여하다",pos:"v"},
+  {en:"perform",ko:"수행하다, 공연하다",pos:"v"},{en:"prevent",ko:"방지하다",pos:"v"},{en:"produce",ko:"생산하다",pos:"v"},
+  {en:"protect",ko:"보호하다",pos:"v"},{en:"provide",ko:"제공하다",pos:"v"},{en:"realize",ko:"깨닫다",pos:"v"},
+  {en:"recognize",ko:"인식하다, 알아보다",pos:"v"},{en:"reflect",ko:"반영하다, 반성하다",pos:"v"},{en:"reject",ko:"거부하다",pos:"v"},
+  {en:"relate",ko:"관련되다",pos:"v"},{en:"remain",ko:"남다, 여전히 ~이다",pos:"v"},{en:"require",ko:"요구하다",pos:"v"},
+  {en:"research",ko:"연구하다",pos:"v"},{en:"respond",ko:"반응하다, 응답하다",pos:"v"},{en:"reveal",ko:"드러내다",pos:"v"},
+  {en:"serve",ko:"봉사하다, 역할을 하다",pos:"v"},{en:"solve",ko:"해결하다",pos:"v"},{en:"suggest",ko:"제안하다",pos:"v"},
+  {en:"support",ko:"지지하다",pos:"v"},{en:"survive",ko:"생존하다",pos:"v"},{en:"transfer",ko:"이동시키다, 전달하다",pos:"v"},
+  {en:"transform",ko:"변형시키다",pos:"v"},{en:"vary",ko:"다양하다, 바뀌다",pos:"v"},{en:"vision",ko:"비전, 시력",pos:"n"},
+  {en:"apply",ko:"적용하다",pos:"v"},{en:"assert",ko:"주장하다",pos:"v"},{en:"contrast",ko:"대조하다",pos:"v"},
+  {en:"define",ko:"정의하다",pos:"v"},{en:"pursue",ko:"추구하다",pos:"v"},{en:"yield",ko:"생산하다, 양보하다",pos:"v"}
 ],
 high2:[
-  {en:"aesthetic",ko:"심미적인, 미적인"},{en:"advocate",ko:"옹호하다, 지지자"},{en:"allocate",ko:"할당하다"},
-  {en:"anticipate",ko:"예상하다, 기대하다"},{en:"apparent",ko:"명백한, 겉보기의"},{en:"appreciate",ko:"감사하다, 진가를 알다"},
-  {en:"arbitrary",ko:"임의적인, 독단적인"},{en:"aspect",ko:"측면, 양상"},{en:"associate",ko:"연관시키다"},
-  {en:"authentic",ko:"진짜의, 진정성 있는"},{en:"coincide",ko:"일치하다"},{en:"coherent",ko:"일관된, 논리적인"},
-  {en:"collaborate",ko:"협력하다, 공동 작업하다"},{en:"compensate",ko:"보상하다"},{en:"comprehensive",ko:"포괄적인, 종합적인"},
-  {en:"conceive",ko:"생각해내다, 임신하다"},{en:"concrete",ko:"구체적인"},{en:"contradict",ko:"모순되다, 반박하다"},
-  {en:"controversy",ko:"논란, 논쟁"},{en:"correlate",ko:"상관관계가 있다"},{en:"credible",ko:"믿을 수 있는"},
-  {en:"deduce",ko:"추론하다, 연역하다"},{en:"deteriorate",ko:"악화되다"},{en:"devote",ko:"헌신하다, 바치다"},
-  {en:"diminish",ko:"줄이다, 약화되다"},{en:"diverse",ko:"다양한"},{en:"dominate",ko:"지배하다, 압도하다"},
-  {en:"elaborate",ko:"정교한, 자세히 설명하다"},{en:"eliminate",ko:"제거하다"},{en:"emphasize",ko:"강조하다"},
-  {en:"enhance",ko:"향상시키다"},{en:"establish",ko:"설립하다, 확립하다"},{en:"evolve",ko:"진화하다, 발전하다"},
-  {en:"exclude",ko:"제외하다"},{en:"facilitate",ko:"촉진하다, 용이하게 하다"},{en:"illustrate",ko:"설명하다, 예시를 들다"},
-  {en:"implement",ko:"실행하다, 시행하다"},{en:"imply",ko:"암시하다"},{en:"inhibit",ko:"억제하다"},
-  {en:"initiate",ko:"시작하다, 개시하다"},{en:"innovate",ko:"혁신하다"},{en:"interpret",ko:"해석하다"},
-  {en:"investigate",ko:"조사하다"},{en:"legitimate",ko:"합법적인, 정당한"},{en:"manipulate",ko:"조작하다, 다루다"},
-  {en:"minimize",ko:"최소화하다"},{en:"modify",ko:"수정하다"},{en:"negotiate",ko:"협상하다"},
-  {en:"perceive",ko:"인식하다, 감지하다"},{en:"persist",ko:"지속하다, 고집하다"},{en:"portray",ko:"묘사하다"},
-  {en:"predict",ko:"예측하다"},{en:"preserve",ko:"보존하다"},{en:"prioritize",ko:"우선시하다"},
-  {en:"promote",ko:"촉진하다, 홍보하다"},{en:"propose",ko:"제안하다"},{en:"rationalize",ko:"합리화하다"},
-  {en:"regulate",ko:"규제하다"},{en:"reinforce",ko:"강화하다"},{en:"represent",ko:"나타내다, 대표하다"},
-  {en:"resolve",ko:"해결하다"},{en:"restrict",ko:"제한하다"},{en:"revise",ko:"수정하다, 개정하다"},
-  {en:"simulate",ko:"모의 실험하다"},{en:"stabilize",ko:"안정화시키다"},{en:"stimulate",ko:"자극하다"},
-  {en:"summarize",ko:"요약하다"},{en:"suppress",ko:"억압하다, 억제하다"},{en:"sustain",ko:"지속하다, 지탱하다"},
-  {en:"transmit",ko:"전달하다, 전송하다"},{en:"undermine",ko:"약화시키다, 훼손하다"},{en:"unify",ko:"통합하다"},
-  {en:"utilize",ko:"활용하다"},{en:"validate",ko:"검증하다"},{en:"verify",ko:"확인하다, 검증하다"},
-  {en:"visualize",ko:"시각화하다"},{en:"abstract",ko:"추상적인"},{en:"alienate",ko:"소외시키다"},
-  {en:"amplify",ko:"증폭시키다"},{en:"attribute",ko:"귀속시키다, 특성"},{en:"clarify",ko:"명확히 하다"},
-  {en:"coexist",ko:"공존하다"},{en:"conform",ko:"순응하다"},{en:"confront",ko:"맞서다, 직면하다"},
-  {en:"contemplate",ko:"숙고하다"},{en:"converge",ko:"수렴하다, 모이다"},{en:"cultivate",ko:"경작하다, 기르다"},
-  {en:"dedicate",ko:"헌신하다, 바치다"},{en:"distort",ko:"왜곡하다"},{en:"exaggerate",ko:"과장하다"},
-  {en:"fluctuate",ko:"변동하다, 오르내리다"},{en:"formulate",ko:"공식화하다, 만들다"},{en:"generate",ko:"생성하다, 만들다"},
-  {en:"illuminate",ko:"밝히다, 명확히 하다"},{en:"integrate",ko:"통합하다"},{en:"isolate",ko:"고립시키다"},
-  {en:"justify",ko:"정당화하다"}
+  {en:"aesthetic",ko:"심미적인, 미적인",pos:"adj"},{en:"advocate",ko:"옹호하다, 지지자",pos:"v"},{en:"allocate",ko:"할당하다",pos:"v"},
+  {en:"anticipate",ko:"예상하다, 기대하다",pos:"v"},{en:"apparent",ko:"명백한, 겉보기의",pos:"adj"},{en:"appreciate",ko:"감사하다, 진가를 알다",pos:"v"},
+  {en:"arbitrary",ko:"임의적인, 독단적인",pos:"adj"},{en:"aspect",ko:"측면, 양상",pos:"n"},{en:"associate",ko:"연관시키다",pos:"v"},
+  {en:"authentic",ko:"진짜의, 진정성 있는",pos:"adj"},{en:"coincide",ko:"일치하다",pos:"v"},{en:"coherent",ko:"일관된, 논리적인",pos:"adj"},
+  {en:"collaborate",ko:"협력하다, 공동 작업하다",pos:"v"},{en:"compensate",ko:"보상하다",pos:"v"},{en:"comprehensive",ko:"포괄적인, 종합적인",pos:"adj"},
+  {en:"conceive",ko:"생각해내다, 임신하다",pos:"v"},{en:"concrete",ko:"구체적인",pos:"adj"},{en:"contradict",ko:"모순되다, 반박하다",pos:"v"},
+  {en:"controversy",ko:"논란, 논쟁",pos:"n"},{en:"correlate",ko:"상관관계가 있다",pos:"v"},{en:"credible",ko:"믿을 수 있는",pos:"adj"},
+  {en:"deduce",ko:"추론하다, 연역하다",pos:"v"},{en:"deteriorate",ko:"악화되다",pos:"v"},{en:"devote",ko:"헌신하다, 바치다",pos:"v"},
+  {en:"diminish",ko:"줄이다, 약화되다",pos:"v"},{en:"diverse",ko:"다양한",pos:"adj"},{en:"dominate",ko:"지배하다, 압도하다",pos:"v"},
+  {en:"elaborate",ko:"정교한, 자세히 설명하다",pos:"adj"},{en:"eliminate",ko:"제거하다",pos:"v"},{en:"emphasize",ko:"강조하다",pos:"v"},
+  {en:"enhance",ko:"향상시키다",pos:"v"},{en:"establish",ko:"설립하다, 확립하다",pos:"v"},{en:"evolve",ko:"진화하다, 발전하다",pos:"v"},
+  {en:"exclude",ko:"제외하다",pos:"v"},{en:"facilitate",ko:"촉진하다, 용이하게 하다",pos:"v"},{en:"illustrate",ko:"설명하다, 예시를 들다",pos:"v"},
+  {en:"implement",ko:"실행하다, 시행하다",pos:"v"},{en:"imply",ko:"암시하다",pos:"v"},{en:"inhibit",ko:"억제하다",pos:"v"},
+  {en:"initiate",ko:"시작하다, 개시하다",pos:"v"},{en:"innovate",ko:"혁신하다",pos:"v"},{en:"interpret",ko:"해석하다",pos:"v"},
+  {en:"investigate",ko:"조사하다",pos:"v"},{en:"legitimate",ko:"합법적인, 정당한",pos:"adj"},{en:"manipulate",ko:"조작하다, 다루다",pos:"v"},
+  {en:"minimize",ko:"최소화하다",pos:"v"},{en:"modify",ko:"수정하다",pos:"v"},{en:"negotiate",ko:"협상하다",pos:"v"},
+  {en:"perceive",ko:"인식하다, 감지하다",pos:"v"},{en:"persist",ko:"지속하다, 고집하다",pos:"v"},{en:"portray",ko:"묘사하다",pos:"v"},
+  {en:"predict",ko:"예측하다",pos:"v"},{en:"preserve",ko:"보존하다",pos:"v"},{en:"prioritize",ko:"우선시하다",pos:"v"},
+  {en:"promote",ko:"촉진하다, 홍보하다",pos:"v"},{en:"propose",ko:"제안하다",pos:"v"},{en:"rationalize",ko:"합리화하다",pos:"v"},
+  {en:"regulate",ko:"규제하다",pos:"v"},{en:"reinforce",ko:"강화하다",pos:"v"},{en:"represent",ko:"나타내다, 대표하다",pos:"v"},
+  {en:"resolve",ko:"해결하다",pos:"v"},{en:"restrict",ko:"제한하다",pos:"v"},{en:"revise",ko:"수정하다, 개정하다",pos:"v"},
+  {en:"simulate",ko:"모의 실험하다",pos:"v"},{en:"stabilize",ko:"안정화시키다",pos:"v"},{en:"stimulate",ko:"자극하다",pos:"v"},
+  {en:"summarize",ko:"요약하다",pos:"v"},{en:"suppress",ko:"억압하다, 억제하다",pos:"v"},{en:"sustain",ko:"지속하다, 지탱하다",pos:"v"},
+  {en:"transmit",ko:"전달하다, 전송하다",pos:"v"},{en:"undermine",ko:"약화시키다, 훼손하다",pos:"v"},{en:"unify",ko:"통합하다",pos:"v"},
+  {en:"utilize",ko:"활용하다",pos:"v"},{en:"validate",ko:"검증하다",pos:"v"},{en:"verify",ko:"확인하다, 검증하다",pos:"v"},
+  {en:"visualize",ko:"시각화하다",pos:"v"},{en:"abstract",ko:"추상적인",pos:"adj"},{en:"alienate",ko:"소외시키다",pos:"v"},
+  {en:"amplify",ko:"증폭시키다",pos:"v"},{en:"attribute",ko:"귀속시키다, 특성",pos:"v"},{en:"clarify",ko:"명확히 하다",pos:"v"},
+  {en:"coexist",ko:"공존하다",pos:"v"},{en:"conform",ko:"순응하다",pos:"v"},{en:"confront",ko:"맞서다, 직면하다",pos:"v"},
+  {en:"contemplate",ko:"숙고하다",pos:"v"},{en:"converge",ko:"수렴하다, 모이다",pos:"v"},{en:"cultivate",ko:"경작하다, 기르다",pos:"v"},
+  {en:"dedicate",ko:"헌신하다, 바치다",pos:"v"},{en:"distort",ko:"왜곡하다",pos:"v"},{en:"exaggerate",ko:"과장하다",pos:"v"},
+  {en:"fluctuate",ko:"변동하다, 오르내리다",pos:"v"},{en:"formulate",ko:"공식화하다, 만들다",pos:"v"},{en:"illuminate",ko:"밝히다, 명확히 하다",pos:"v"},
+  {en:"isolate",ko:"고립시키다",pos:"v"},{en:"justify",ko:"정당화하다",pos:"v"}
 ],
 high3:[
-  {en:"abolish",ko:"폐지하다"},{en:"abstain",ko:"자제하다, 기권하다"},{en:"accumulate",ko:"축적하다"},
-  {en:"alleviate",ko:"완화하다, 경감하다"},{en:"ambivalent",ko:"상반된 감정의"},{en:"ameliorate",ko:"개선하다"},
-  {en:"analogous",ko:"유사한, 비슷한"},{en:"articulate",ko:"명확히 표현하다"},{en:"assimilate",ko:"동화시키다"},
-  {en:"attain",ko:"달성하다, 얻다"},{en:"benevolent",ko:"자비로운, 친절한"},{en:"catastrophic",ko:"재앙적인"},
-  {en:"circumvent",ko:"우회하다, 회피하다"},{en:"coerce",ko:"강요하다"},{en:"compelling",ko:"강렬한, 설득력 있는"},
-  {en:"comply",ko:"따르다, 준수하다"},{en:"confront",ko:"맞서다, 직면하다"},{en:"contemporary",ko:"현대의, 동시대인"},
-  {en:"contempt",ko:"경멸, 무시"},{en:"contradict",ko:"모순되다, 반박하다"},{en:"converge",ko:"수렴하다, 모이다"},
-  {en:"cultivate",ko:"기르다, 경작하다"},{en:"dedicate",ko:"헌신하다"},{en:"deliberate",ko:"신중한, 숙고하다"},
-  {en:"deteriorate",ko:"악화되다"},{en:"detrimental",ko:"해로운"},{en:"deviate",ko:"벗어나다"},
-  {en:"diligent",ko:"부지런한, 근면한"},{en:"discern",ko:"식별하다, 분별하다"},{en:"disparity",ko:"불균형, 차이"},
-  {en:"disseminate",ko:"보급하다, 퍼뜨리다"},{en:"diverge",ko:"갈라지다, 벗어나다"},{en:"eloquent",ko:"웅변적인, 유창한"},
-  {en:"empirical",ko:"경험적인, 실증적인"},{en:"endeavor",ko:"노력하다, 시도"},{en:"enumerate",ko:"열거하다"},
-  {en:"exploit",ko:"착취하다, 공적"},{en:"explicit",ko:"명시적인, 명백한"},{en:"formidable",ko:"무서운, 만만치 않은"},
-  {en:"fragile",ko:"깨지기 쉬운, 취약한"},{en:"fundamental",ko:"근본적인"},{en:"genuine",ko:"진짜의, 진실한"},
-  {en:"hierarchy",ko:"위계, 계층 구조"},{en:"hypothetical",ko:"가상의, 가정의"},{en:"imminent",ko:"임박한"},
-  {en:"implicit",ko:"암묵적인"},{en:"inevitable",ko:"불가피한"},{en:"inherent",ko:"타고난, 내재적인"},
-  {en:"innovative",ko:"혁신적인"},{en:"integrity",ko:"진실성, 완전성"},{en:"intrinsic",ko:"본질적인"},
-  {en:"juxtapose",ko:"나란히 놓다"},{en:"legitimate",ko:"합법적인, 정당한"},{en:"lucid",ko:"명쾌한, 투명한"},
-  {en:"meticulous",ko:"꼼꼼한, 세심한"},{en:"mitigate",ko:"완화하다"},{en:"nuance",ko:"뉘앙스, 미묘한 차이"},
-  {en:"obscure",ko:"모호한, 잘 알려지지 않은"},{en:"paradigm",ko:"패러다임, 전형적 예"},{en:"perpetual",ko:"영속적인, 끊임없는"},
-  {en:"pervasive",ko:"만연한, 퍼져있는"},{en:"plausible",ko:"그럴듯한"},{en:"pragmatic",ko:"실용적인"},
-  {en:"prevalent",ko:"만연한, 흔한"},{en:"profound",ko:"심오한, 깊은"},{en:"prohibit",ko:"금지하다"},
-  {en:"refute",ko:"반박하다"},{en:"resilient",ko:"회복력 있는"},{en:"scrutinize",ko:"면밀히 조사하다"},
-  {en:"skeptical",ko:"회의적인"},{en:"sophisticated",ko:"정교한, 세련된"},{en:"speculate",ko:"추측하다"},
-  {en:"subordinate",ko:"하위의, 부하"},{en:"substantial",ko:"상당한, 실질적인"},{en:"superfluous",ko:"불필요한, 과도한"},
-  {en:"suppress",ko:"억압하다, 억제하다"},{en:"susceptible",ko:"영향받기 쉬운, 취약한"},{en:"tentative",ko:"잠정적인, 망설이는"},
-  {en:"transparent",ko:"투명한, 명백한"},{en:"trivial",ko:"사소한, 하찮은"},{en:"undermine",ko:"약화시키다, 훼손하다"},
-  {en:"validate",ko:"검증하다, 확인하다"},{en:"versatile",ko:"다재다능한, 다목적의"},{en:"vivid",ko:"생생한, 선명한"},
-  {en:"vulnerable",ko:"취약한, 상처받기 쉬운"},{en:"withstand",ko:"견디다, 저항하다"},{en:"acute",ko:"날카로운, 심각한"},
-  {en:"chronic",ko:"만성적인"},{en:"concise",ko:"간결한"},{en:"cynical",ko:"냉소적인"},
-  {en:"erratic",ko:"불규칙한, 변덕스러운"},{en:"tenacious",ko:"끈질긴, 완강한"},{en:"ambiguous",ko:"모호한"},
-  {en:"coherent",ko:"일관된"},{en:"eloquence",ko:"웅변, 유창함"},{en:"ideology",ko:"이념, 이데올로기"},
-  {en:"manifest",ko:"명백한, 명시하다"},{en:"obsolete",ko:"더 이상 쓰이지 않는, 구식의"},
-  {en:"paradox",ko:"역설"},{en:"rhetoric",ko:"수사학, 미사여구"}
-]
-};
+  {en:"abolish",ko:"폐지하다",pos:"v"},{en:"abstain",ko:"자제하다, 기권하다",pos:"v"},{en:"accumulate",ko:"축적하다",pos:"v"},
+  {en:"alleviate",ko:"완화하다, 경감하다",pos:"v"},{en:"ambivalent",ko:"상반된 감정의",pos:"adj"},{en:"ameliorate",ko:"개선하다",pos:"v"},
+  {en:"analogous",ko:"유사한, 비슷한",pos:"adj"},{en:"articulate",ko:"명확히 표현하다",pos:"v"},{en:"assimilate",ko:"동화시키다",pos:"v"},
+  {en:"attain",ko:"달성하다, 얻다",pos:"v"},{en:"benevolent",ko:"자비로운, 친절한",pos:"adj"},{en:"catastrophic",ko:"재앙적인",pos:"adj"},
+  {en:"circumvent",ko:"우회하다, 회피하다",pos:"v"},{en:"coerce",ko:"강요하다",pos:"v"},{en:"compelling",ko:"강렬한, 설득력 있는",pos:"adj"},
+  {en:"comply",ko:"따르다, 준수하다",pos:"v"},{en:"confront",ko:"맞서다, 직면하다",pos:"v"},{en:"contemporary",ko:"현대의, 동시대인",pos:"adj"},
+  {en:"contempt",ko:"경멸, 무시",pos:"n"},{en:"contradict",ko:"모순되다, 반박하다",pos:"v"},{en:"converge",ko:"수렴하다, 모이다",pos:"v"},
+  {en:"cultivate",ko:"기르다, 경작하다",pos:"v"},{en:"dedicate",ko:"헌신하다",pos:"v"},{en:"deliberate",ko:"신중한, 숙고하다",pos:"adj"},
+  {en:"deteriorate",ko:"악화되다",pos:"v"},{en:"detrimental",ko:"해로운",pos:"adj"},{en:"deviate",ko:"벗어나다",pos:"v"},
+  {en:"diligent",ko:"부지런한, 근면한",pos:"adj"},{en:"discern",ko:"식별하다, 분별하다",pos:"v"},{en:"disparity",ko:"불균형, 차이",pos:"n"},
+  {en:"disseminate",ko:"보급하다, 퍼뜨리다",pos:"v"},{en:"diverge",ko:"갈라지다, 벗어나다",pos:"v"},{en:"eloquent",ko:"웅변적인, 유창한",pos:"adj"},
+  {en:"empirical",ko:"경험적인, 실증적인",pos:"adj"},{en:"endeavor",ko:"노력하다, 시도",pos:"v"},{en:"enumerate",ko:"열거하다",pos:"v"},
+  {en:"exploit",ko:"착취하다, 공적",pos:"v"},{en:"explicit",ko:"명시적인, 명백한",pos:"adj"},{en:"formidable",ko:"무서운, 만만치 않은",pos:"adj"},
+  {en:"fragile",ko:"깨지기 쉬운, 취약한",pos:"adj"},{en:"fundamental",ko:"근본적인",pos:"adj"},{en:"genuine",ko:"진짜의, 진실한",pos:"adj"},
+  {en:"hierarchy",ko:"위계, 계층 구조",pos:"n"},{en:"hypothetical",ko:"가상의, 가정의",pos:"adj"},{en:"imminent",ko:"임박한",pos:"adj"},
+  {en:"implicit",ko:"암묵적인",pos:"adj"},{en:"inevitable",ko:"불가피한",pos:"adj"},{en:"inherent",ko:"타고난, 내재적인",pos:"adj"},
+  {en:"innovative",ko:"혁신적인",pos:"adj"},{en:"integrity",ko:"진실성, 완전성",pos:"n"},{en:"intrinsic",ko:"본질적인",pos:"adj"},
+  {en:"juxtapose",ko:"나란히 놓다",pos:"v"},{en:"legitimate",ko:"합법적인, 정당한",pos:"adj"},{en:"lucid",ko:"명쾌한, 투명한",pos:"adj"},
+  {en:"meticulous",ko:"꼼꼼한, 세심한",pos:"adj"},{en:"mitigate",ko:"완화하다",pos:"v"},{en:"nuance",ko:"뉘앙스, 미묘한 차이",pos:"n"},
+  {en:"obscure",ko:"모호한, 잘 알려지지 않은",pos:"adj"},{en:"paradigm",ko:"패러다임, 전형적 예",pos:"n"},{en:"perpetual",ko:"영속적인, 끊임없는",pos:"adj"},
+  {en:"pervasive",ko:"만연한, 퍼져있는",pos:"adj"},{en:"plausible",ko:"그럴듯한",pos:"adj"},{en:"pragmatic",ko:"실용적인",pos:"adj"},
+  {en:"prevalent",ko:"만연한, 흔한",pos:"adj"},{en:"profound",ko:"심오한, 깊은",pos:"adj"},{en:"prohibit",ko:"금지하다",pos:"v"},
+  {en:"refute",ko:"반박하다",pos:"v"},{en:"resilient",ko:"회복력 있는",pos:"adj"},{en:"scrutinize",ko:"면밀히 조사하다",pos:"v"},
+  {en:"skeptical",ko:"회의적인",pos:"adj"},{en:"sophisticated",ko:"정교한, 세련된",pos:"adj"},{en:"speculate",ko:"추측하다",pos:"v"},
+  {en:"subordinate",ko:"하위의, 부하",pos:"adj"},{en:"substantial",ko:"상당한, 실질적인",pos:"adj"},{en:"superfluous",ko:"불필요한, 과도한",pos:"adj"},
+  {en:"suppress",ko:"억압하다, 억제하다",pos:"v"},{en:"susceptible",ko:"영향받기 쉬운, 취약한",pos:"adj"},{en:"tentative",ko:"잠정적인, 망설이는",pos:"adj"},
+  {en:"transparent",ko:"투명한, 명백한",pos:"adj"},{en:"trivial",ko:"사소한, 하찮은",pos:"adj"},{en:"undermine",ko:"약화시키다, 훼손하다",pos:"v"},
+  {en:"validate",ko:"검증하다, 확인하다",pos:"v"},{en:"versatile",ko:"다재다능한, 다목적의",pos:"adj"},{en:"vivid",ko:"생생한, 선명한",pos:"adj"},
+  {en:"vulnerable",ko:"취약한, 상처받기 쉬운",pos:"adj"},{en:"withstand",ko:"견디다, 저항하다",pos:"v"},{en:"acute",ko:"날카로운, 심각한",pos:"adj"},
+  {en:"chronic",ko:"만성적인",pos:"adj"},{en:"concise",ko:"간결한",pos:"adj"},{en:"cynical",ko:"냉소적인",pos:"adj"},
+  {en:"erratic",ko:"불규칙한, 변덕스러운",pos:"adj"},{en:"tenacious",ko:"끈질긴, 완강한",pos:"adj"},{en:"ambiguous",ko:"모호한",pos:"adj"},
+  {en:"coherent",ko:"일관된",pos:"adj"},{en:"eloquence",ko:"웅변, 유창함",pos:"n"},{en:"ideology",ko:"이념, 이데올로기",pos:"n"},
+  {en:"manifest",ko:"명백한, 명시하다",pos:"adj"},{en:"obsolete",ko:"더 이상 쓰이지 않는, 구식의",pos:"adj"},
+  {en:"paradox",ko:"역설",pos:"n"},{en:"rhetoric",ko:"수사학, 미사여구",pos:"n"}
+]};
 
-const IDIOMS = [
-  {en:"break a leg",ko:"행운을 빌다"},{en:"hit the nail on the head",ko:"정확히 맞추다, 핵심을 짚다"},
-  {en:"bite the bullet",ko:"이를 악물고 견디다"},{en:"once in a blue moon",ko:"아주 드물게"},
-  {en:"under the weather",ko:"몸이 좋지 않은"},{en:"piece of cake",ko:"매우 쉬운 일"},
-  {en:"cost an arm and a leg",ko:"매우 비싸다"},{en:"let the cat out of the bag",ko:"비밀을 누설하다"},
-  {en:"burn the midnight oil",ko:"밤새워 공부하다"},{en:"hit the books",ko:"공부하다"},
-  {en:"on the fence",ko:"결정을 못 내리고 있는"},{en:"spill the beans",ko:"비밀을 털어놓다"},
-  {en:"beat around the bush",ko:"핵심을 피해서 말하다"},{en:"get the hang of",ko:"요령을 익히다"},
-  {en:"turn a blind eye",ko:"못 본 척하다, 외면하다"},{en:"hit the road",ko:"출발하다, 길을 나서다"},
-  {en:"keep an eye on",ko:"주시하다, 감시하다"},{en:"go the extra mile",ko:"특별히 더 노력하다"},
-  {en:"break the ice",ko:"어색함을 없애다"},{en:"pull someone's leg",ko:"놀리다, 농담하다"},
-  {en:"hit the sack",ko:"자러 가다"},{en:"add fuel to the fire",ko:"불에 기름을 붓다, 악화시키다"},
-  {en:"a blessing in disguise",ko:"전화위복"},{en:"at the drop of a hat",ko:"즉시, 지체 없이"},
-  {en:"back to the drawing board",ko:"처음부터 다시 시작하다"},{en:"bite the dust",ko:"실패하다, 쓰러지다"},
-  {en:"call it a day",ko:"오늘은 여기서 마치다"},{en:"cut corners",ko:"편법을 쓰다"},
-  {en:"every cloud has a silver lining",ko:"모든 불행에는 희망이 있다"},{en:"face the music",ko:"결과에 책임을 지다"},
-  {en:"get cold feet",ko:"두려워서 겁먹다"},{en:"hit the ceiling",ko:"몹시 화를 내다"},
-  {en:"in hot water",ko:"곤경에 처한"},{en:"jump on the bandwagon",ko:"유행에 편승하다"},
-  {en:"kill two birds with one stone",ko:"일석이조"},{en:"leave no stone unturned",ko:"모든 수단을 동원하다"},
-  {en:"miss the boat",ko:"기회를 놓치다"},{en:"not my cup of tea",ko:"내 취향이 아니다"},
-  {en:"pass the buck",ko:"책임을 전가하다"},{en:"read between the lines",ko:"행간의 의미를 읽다"},
-  {en:"see eye to eye",ko:"의견이 일치하다"},{en:"take with a grain of salt",ko:"약간 의심하며 받아들이다"},
-  {en:"the last straw",ko:"인내의 한계를 넘게 하는 것"},{en:"throw in the towel",ko:"포기하다, 항복하다"},
-  {en:"on the tip of one's tongue",ko:"입에서 맴돌다"},{en:"bite off more than you can chew",ko:"감당 못 할 일을 벌이다"},
-  {en:"the ball is in your court",ko:"이제 당신이 결정할 차례다"},{en:"it takes two to tango",ko:"손뼉도 마주쳐야 소리가 난다"}
+const IDIOMS=[
+  {en:"break a leg",ko:"행운을 빌다",pos:"idiom"},{en:"hit the nail on the head",ko:"정확히 맞추다, 핵심을 짚다",pos:"idiom"},
+  {en:"bite the bullet",ko:"이를 악물고 견디다",pos:"idiom"},{en:"once in a blue moon",ko:"아주 드물게",pos:"idiom"},
+  {en:"under the weather",ko:"몸이 좋지 않은",pos:"idiom"},{en:"piece of cake",ko:"매우 쉬운 일",pos:"idiom"},
+  {en:"cost an arm and a leg",ko:"매우 비싸다",pos:"idiom"},{en:"let the cat out of the bag",ko:"비밀을 누설하다",pos:"idiom"},
+  {en:"burn the midnight oil",ko:"밤새워 공부하다",pos:"idiom"},{en:"hit the books",ko:"공부하다",pos:"idiom"},
+  {en:"on the fence",ko:"결정을 못 내리고 있는",pos:"idiom"},{en:"spill the beans",ko:"비밀을 털어놓다",pos:"idiom"},
+  {en:"beat around the bush",ko:"핵심을 피해서 말하다",pos:"idiom"},{en:"get the hang of",ko:"요령을 익히다",pos:"idiom"},
+  {en:"turn a blind eye",ko:"못 본 척하다, 외면하다",pos:"idiom"},{en:"hit the road",ko:"출발하다, 길을 나서다",pos:"idiom"},
+  {en:"keep an eye on",ko:"주시하다, 감시하다",pos:"idiom"},{en:"go the extra mile",ko:"특별히 더 노력하다",pos:"idiom"},
+  {en:"break the ice",ko:"어색함을 없애다",pos:"idiom"},{en:"pull someone's leg",ko:"놀리다, 농담하다",pos:"idiom"},
+  {en:"hit the sack",ko:"자러 가다",pos:"idiom"},{en:"add fuel to the fire",ko:"불에 기름을 붓다, 악화시키다",pos:"idiom"},
+  {en:"a blessing in disguise",ko:"전화위복",pos:"idiom"},{en:"at the drop of a hat",ko:"즉시, 지체 없이",pos:"idiom"},
+  {en:"back to the drawing board",ko:"처음부터 다시 시작하다",pos:"idiom"},{en:"bite the dust",ko:"실패하다, 쓰러지다",pos:"idiom"},
+  {en:"call it a day",ko:"오늘은 여기서 마치다",pos:"idiom"},{en:"cut corners",ko:"편법을 쓰다",pos:"idiom"},
+  {en:"every cloud has a silver lining",ko:"모든 불행에는 희망이 있다",pos:"idiom"},{en:"face the music",ko:"결과에 책임을 지다",pos:"idiom"},
+  {en:"get cold feet",ko:"두려워서 겁먹다",pos:"idiom"},{en:"hit the ceiling",ko:"몹시 화를 내다",pos:"idiom"},
+  {en:"in hot water",ko:"곤경에 처한",pos:"idiom"},{en:"jump on the bandwagon",ko:"유행에 편승하다",pos:"idiom"},
+  {en:"kill two birds with one stone",ko:"일석이조",pos:"idiom"},{en:"leave no stone unturned",ko:"모든 수단을 동원하다",pos:"idiom"},
+  {en:"miss the boat",ko:"기회를 놓치다",pos:"idiom"},{en:"not my cup of tea",ko:"내 취향이 아니다",pos:"idiom"},
+  {en:"pass the buck",ko:"책임을 전가하다",pos:"idiom"},{en:"read between the lines",ko:"행간의 의미를 읽다",pos:"idiom"},
+  {en:"see eye to eye",ko:"의견이 일치하다",pos:"idiom"},{en:"take with a grain of salt",ko:"약간 의심하며 받아들이다",pos:"idiom"},
+  {en:"the last straw",ko:"인내의 한계를 넘게 하는 것",pos:"idiom"},{en:"throw in the towel",ko:"포기하다, 항복하다",pos:"idiom"},
+  {en:"on the tip of one's tongue",ko:"입에서 맴돌다",pos:"idiom"},{en:"bite off more than you can chew",ko:"감당 못 할 일을 벌이다",pos:"idiom"},
+  {en:"the ball is in your court",ko:"이제 당신이 결정할 차례다",pos:"idiom"},{en:"it takes two to tango",ko:"손뼉도 마주쳐야 소리가 난다",pos:"idiom"},
+  {en:"actions speak louder than words",ko:"말보다 행동이 중요하다",pos:"idiom"},{en:"the early bird catches the worm",ko:"일찍 일어나는 새가 벌레를 잡는다",pos:"idiom"}
 ];
 
-// ═══════════════════════════════════════════
-//  MILESTONE MESSAGES
-// ═══════════════════════════════════════════
-const MILESTONES = {
-  10:["🎉 10개 달성! 훌륭한 시작이에요!","💪 10개 클리어! 이 기세로 계속 가요!","⭐ 10개 완료! 순조롭게 출발했어요!"],
-  20:["🔥 20개 돌파! 점점 빨라지고 있어요!","🌟 20개 완료! 대단한 집중력이에요!","✨ 벌써 20개! 조금만 더 힘내봐요!"],
-  30:["🏃 30개 달성! 반의반이 왔어요!","💨 30개! 이 페이스면 금방이에요!","🎯 30개 클리어! 좋은 리듬이에요!"],
-  40:["⚡ 40개! 이제 절반이 코앞이에요!","🌈 40개 돌파! 정말 대단한 집중력!","🎪 40개! 절반까지 조금만 더요!"],
-  50:["🏅 절반 달성! 50개 완주! 정말 대단해요!","🎊 50개! 이제 내리막길이에요! 화이팅!","🥳 중간 지점 도달! 50개 완료! 최고예요!"],
-  60:["🚀 60개 돌파! 이제 40개만 남았어요!","💫 60개! 종착지가 보이기 시작해요!","🔮 60개 완료! 거의 다 왔어요! 포기 금지!"],
-  70:["🌠 70개! 마지막 30개! 할 수 있어요!","⭐ 70개 클리어! 진짜 얼마 안 남았어요!","🏆 70개! 이쯤 되면 진짜 실력자예요!"],
-  80:["🎯 80개 돌파! 이제 20개만! 거의 다 왔어요!","🔥 80개! 조금만 더 힘내요! 응원해요!","💥 80개 완료! 마지막 스퍼트 시작!"],
-  90:["🚀 90개! 마지막 10개만! 할 수 있어요!","⚡ 거의 다 왔어요! 90개 완료! 마지막!","🏁 90개! 결승선이 바로 눈앞이에요!"],
+const MILESTONES={
+  10:["🎉 10개 달성! 훌륭한 시작이에요!","💪 10개 클리어! 이 기세로!","⭐ 10개 완료! 순조롭게 출발!"],
+  20:["🔥 20개 돌파! 점점 빨라지고 있어요!","🌟 20개 완료! 대단해요!","✨ 벌써 20개! 계속!"],
+  30:["🏃 30개! 반의반이 왔어요!","💨 30개! 이 페이스면 금방!","🎯 30개 클리어! 좋은 리듬!"],
+  40:["⚡ 40개! 절반이 코앞!","🌈 40개 돌파! 대단한 집중력!","🎪 40개! 조금만 더!"],
+  50:["🏅 절반 달성! 50개 완주!","🎊 50개! 내리막길이에요!","🥳 중간 지점! 50개 완료!"],
+  60:["🚀 60개! 40개만 남았어요!","💫 60개! 종착지가 보여요!","🔮 60개! 거의 다 왔어요!"],
+  70:["🌠 70개! 30개만 남았어요!","⭐ 70개! 얼마 안 남았어요!","🏆 70개! 진짜 실력자예요!"],
+  80:["🎯 80개! 20개만 남았어요!","🔥 80개! 마지막 스퍼트!","💥 80개! 거의 다 왔어요!"],
+  90:["🚀 90개! 10개만! 할 수 있어요!","⚡ 90개! 마지막!","🏁 결승선이 바로 눈앞!"],
 };
 
-// ═══════════════════════════════════════════
-//  CONSTANTS & HELPERS
-// ═══════════════════════════════════════════
-const MAX_STAGE = 10;
-const GRADE_INFO = {
-  mid3:{name:"중 3",color:"mid3",desc:"중3 필수 단어 100개"},
-  high1:{name:"고 1",color:"high1",desc:"고1 필수 단어 100개"},
-  high2:{name:"고 2",color:"high2",desc:"고2 필수 단어 100개"},
-  high3:{name:"고 3",color:"고3",desc:"고3 수능 단어 100개"},
+const MAX_STAGE=10;
+const GRADE_INFO={
+  mid3:{name:"중 3",desc:"중3 필수 단어 100개"},
+  high1:{name:"고 1",desc:"고1 필수 단어 100개"},
+  high2:{name:"고 2",desc:"고2 필수 단어 100개"},
+  high3:{name:"고 3",desc:"고3 수능 단어 100개"},
 };
 const LV_LABEL={mid3:"중3",high1:"고1",high2:"고2",high3:"고3",idiom:"숙어"};
-const LV_CLASS={mid3:"mid3",high1:"high1",high2:"high2",high3:"고3",idiom:"idiom"};
 const MODE_LABEL={'en-ko':'영어→한글','ko-en':'한글→영어','idiom-en-ko':'숙어 영→한','idiom-ko-en':'숙어 한→영','all':'전체 종합'};
 
 function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
 
-function calcRank(correct,total){
-  if(!total)return{rank:'—',emoji:'📊',msg:'데이터 없음',color:'var(--muted)'};
-  const a=correct/total;
-  if(a>=.95)return{rank:'S',emoji:'🏆',msg:'완벽한 실력이에요!',color:'var(--gold)'};
-  if(a>=.85)return{rank:'A',emoji:'🥇',msg:'훌륭해요!',color:'#c0c0ff'};
+function calcRank(c,t){
+  if(!t)return{rank:'—',emoji:'📊',msg:'데이터 없음',color:'rgba(255,255,255,.5)'};
+  const a=c/t;
+  if(a>=.95)return{rank:'S',emoji:'🏆',msg:'완벽!',color:'var(--gold)'};
+  if(a>=.85)return{rank:'A',emoji:'🥇',msg:'훌륭해요!',color:'#c8f0ff'};
   if(a>=.70)return{rank:'B',emoji:'🥈',msg:'잘하고 있어요!',color:'var(--green)'};
-  if(a>=.55)return{rank:'C',emoji:'🥉',msg:'조금 더 연습해봐요',color:'var(--orange)'};
-  return{rank:'D',emoji:'📚',msg:'꾸준히 복습이 필요해요',color:'var(--red)'};
+  if(a>=.55)return{rank:'C',emoji:'🥉',msg:'조금 더 연습해요',color:'var(--orange)'};
+  return{rank:'D',emoji:'📚',msg:'꾸준한 복습이 필요해요',color:'var(--red)'};
 }
 
-// ═══════════════════════════════════════════
-//  LOCALSTORAGE
-// ═══════════════════════════════════════════
+// ═══════════════ LOCALSTORAGE ════════════════
 function todayKey(){return'wq_day_'+new Date().toISOString().slice(0,10);}
 function loadDay(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
 function saveDay(k,d){localStorage.setItem(k,JSON.stringify(d));}
@@ -699,179 +746,230 @@ function stageKey(g,m){return'wq_stg_'+(g||'null')+'_'+m;}
 function loadStageIdx(g,m){return parseInt(localStorage.getItem(stageKey(g,m))||'0');}
 function saveStageIdx(g,m,i){localStorage.setItem(stageKey(g,m),i);}
 
-// ═══════════════════════════════════════════
-//  BUILD HOME UI
-// ═══════════════════════════════════════════
+// ═══════════════ PLAYER NAME & RANKING ════════════════
+function getPlayerName(){return localStorage.getItem('wq_player_name')||'';}
+function setPlayerName(n){localStorage.setItem('wq_player_name',n);}
+function loadRanking(){try{return JSON.parse(localStorage.getItem('wq_ranking')||'[]');}catch(e){return[];}}
+function saveRanking(r){localStorage.setItem('wq_ranking',JSON.stringify(r));}
+function updateRanking(name,score,correct,wrong){
+  const r=loadRanking();
+  const idx=r.findIndex(x=>x.name===name);
+  const acc=correct+wrong>0?Math.round(correct/(correct+wrong)*100):0;
+  if(idx>=0){r[idx].score+=score;r[idx].correct+=correct;r[idx].wrong+=wrong;
+    r[idx].acc=Math.round(r[idx].correct/(r[idx].correct+r[idx].wrong)*100);}
+  else{r.push({name,score,correct,wrong,acc});}
+  r.sort((a,b)=>b.score-a.score);
+  saveRanking(r);
+}
+function checkNameAndStart(cb){
+  const n=getPlayerName();
+  if(n){cb();return;}
+  document.getElementById('name-modal').classList.add('show');
+  document.getElementById('name-input').focus();
+  window._nameCallback=cb;
+}
+function saveName(){
+  const n=document.getElementById('name-input').value.trim();
+  if(!n){alert('이름을 입력해주세요!');return;}
+  setPlayerName(n);
+  document.getElementById('name-modal').classList.remove('show');
+  if(window._nameCallback){window._nameCallback();window._nameCallback=null;}
+}
+document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
+function changeName(){
+  localStorage.removeItem('wq_player_name');
+  document.getElementById('name-modal').classList.add('show');
+  document.getElementById('name-input').value='';
+  document.getElementById('name-input').focus();
+  window._nameCallback=()=>{goRanking();};
+}
+function goRanking(){
+  const me=getPlayerName();
+  document.getElementById('my-name-lbl').textContent=me||'(이름 없음)';
+  const r=loadRanking();
+  const tbl=document.getElementById('rank-table');tbl.innerHTML='';
+  if(!r.length){tbl.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">아직 기록이 없어요</div>';showScreen('sc-ranking');return;}
+  r.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.className='rank-row glass'+(p.name===me?' me':'');
+    const numClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    row.innerHTML=`<div class="rank-num ${numClass}">${medal||i+1}</div>
+      <div class="rank-name">${p.name}${p.name===me?' ⬅️ 나':''}</div>
+      <div style="text-align:right"><div class="rank-score">${p.score.toLocaleString()}pt</div>
+      <div class="rank-acc">${p.acc}% 정확도</div></div>`;
+    tbl.appendChild(row);
+  });
+  showScreen('sc-ranking');
+}
+
+// ═══════════════ BUBBLES ════════════════
+function makeBubbles(){
+  const wrap=document.getElementById('bubbles');
+  for(let i=0;i<18;i++){
+    const b=document.createElement('div');b.className='bbl';
+    const sz=8+Math.random()*28;
+    b.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;
+      bottom:-30px;animation-duration:${6+Math.random()*12}s;
+      animation-delay:-${Math.random()*12}s;opacity:${0.1+Math.random()*.25}`;
+    wrap.appendChild(b);
+  }
+}
+
+// ═══════════════ HOME UI ════════════════
 function buildGradeGrid(){
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   const grades=['mid3','high1','high2','high3'];
   const icons=['📗','📘','📙','📕'];
   grades.forEach((g,i)=>{
-    const info=GRADE_INFO[g];
-    const si=loadStageIdx(g,'all');
-    const card=document.createElement('div');
-    card.className='grade-card '+g;
+    const info=GRADE_INFO[g];const si=loadStageIdx(g,'all');
+    const card=document.createElement('div');card.className='grade-card glass';
     card.innerHTML=`<div class="g-icon">${icons[i]}</div><h3>${info.name}</h3><p>100단어</p><span class="g-stage">STAGE ${si+1}</span>`;
-    card.onclick=()=>goGrade(g);
-    grid.appendChild(card);
+    card.onclick=()=>checkNameAndStart(()=>goGrade(g));grid.appendChild(card);
   });
 }
-
 function renderTodayCard(){
   const today=new Date();
   document.getElementById('today-date-lbl').textContent=`${today.getMonth()+1}월 ${today.getDate()}일`;
-  const d=loadDay(todayKey());
-  const body=document.getElementById('today-body');
-  if(!d||!d.sessions.length){
-    body.innerHTML='<div class="today-empty">아직 오늘 학습 기록이 없어요. 지금 시작해보세요! 🚀</div>';return;
-  }
-  const total=d.totalCorrect+d.totalWrong;
-  const acc=total?Math.round(d.totalCorrect/total*100):0;
+  const d=loadDay(todayKey());const body=document.getElementById('today-body');
+  if(!d||!d.sessions.length){body.innerHTML='<div class="today-empty">아직 오늘 학습 기록이 없어요. 지금 시작해보세요! 🚀</div>';return;}
+  const total=d.totalCorrect+d.totalWrong;const acc=total?Math.round(d.totalCorrect/total*100):0;
   const r=calcRank(d.totalCorrect,total);
-  body.innerHTML=`
-    <div class="today-stats">
-      <div class="today-stat"><div class="tv" style="color:var(--gold)">${d.totalScore.toLocaleString()}</div><div class="tl">총점</div></div>
-      <div class="today-stat"><div class="tv" style="color:var(--green)">${d.totalCorrect}</div><div class="tl">정답</div></div>
-      <div class="today-stat"><div class="tv" style="color:var(--red)">${d.totalWrong}</div><div class="tl">오답</div></div>
-      <div class="today-stat"><div class="tv" style="color:var(--primary)">${acc}%</div><div class="tl">정확도</div></div>
-    </div>
-    <div class="today-grade-row">
-      <span style="font-size:1.4rem;font-weight:900;color:${r.color}">${r.rank}</span>
-      <span style="color:var(--muted);font-size:.72rem">${d.sessions.length}세션 · 최고연속 ${d.bestStreak}</span>
-      <span class="today-grade-msg">${r.msg}</span>
-    </div>`;
+  body.innerHTML=`<div class="today-stats">
+    <div class="today-stat"><div class="tv" style="color:var(--gold)">${d.totalScore.toLocaleString()}</div><div class="tl">총점</div></div>
+    <div class="today-stat"><div class="tv" style="color:var(--green)">${d.totalCorrect}</div><div class="tl">정답</div></div>
+    <div class="today-stat"><div class="tv" style="color:var(--red)">${d.totalWrong}</div><div class="tl">오답</div></div>
+    <div class="today-stat"><div class="tv" style="color:var(--primary)">${acc}%</div><div class="tl">정확도</div></div>
+  </div>
+  <div class="today-grade-row">
+    <span style="font-size:1.4rem;font-weight:900;color:${r.color}">${r.rank}</span>
+    <span style="color:var(--muted);font-size:.72rem">${d.sessions.length}세션 · 최고연속 ${d.bestStreak}</span>
+    <span style="font-size:.8rem">${r.msg}</span>
+  </div>`;
 }
 
-// ═══════════════════════════════════════════
-//  GRADE SELECT
-// ═══════════════════════════════════════════
+// ═══════════════ GRADE SELECT ════════════════
 let selGrade=null;
 function goGrade(g){
-  selGrade=g;
-  const info=GRADE_INFO[g];
+  selGrade=g;const info=GRADE_INFO[g];
   document.getElementById('grade-nav-t').textContent=info.name;
   const badge=document.getElementById('grade-big-badge');
-  badge.textContent=info.name;badge.className='grade-big '+g;
+  badge.textContent=info.name;
   document.getElementById('grade-sub-p').textContent=info.desc+' · 무제한 랜덤';
   const ml=document.getElementById('mode-list');ml.innerHTML='';
   const modes=[
-    {m:'en-ko',icon:'🔤',h:'영어 → 한글',p:'영어 단어 보고 한글 뜻 타이핑'},
-    {m:'ko-en',icon:'🇰🇷',h:'한글 → 영어',p:'한글 뜻 보고 영어 단어 타이핑'},
-    {m:'idiom-en-ko',icon:'💬',h:'숙어 영어 → 한글',p:'영어 숙어 보고 한글 뜻 타이핑'},
-    {m:'idiom-ko-en',icon:'🗣️',h:'숙어 한글 → 영어',p:'한글 뜻 보고 영어 숙어 타이핑'},
+    {m:'en-ko',icon:'🔤',h:'영어 → 한글',p:'영어 단어 보고 한글 뜻 고르기'},
+    {m:'ko-en',icon:'🇰🇷',h:'한글 → 영어',p:'한글 뜻 보고 영어 단어 고르기'},
+    {m:'idiom-en-ko',icon:'💬',h:'숙어 영어 → 한글',p:'영어 숙어 보고 한글 뜻 고르기'},
+    {m:'idiom-ko-en',icon:'🗣️',h:'숙어 한글 → 영어',p:'한글 뜻 보고 영어 숙어 고르기'},
     {m:'all',icon:'⚡',h:'학년 전체 종합',p:'단어+숙어 · 영한+한영 완전 혼합'},
   ];
   modes.forEach(({m,icon,h,p})=>{
     const si=loadStageIdx(g,m);
-    const row=document.createElement('div');
-    row.className='mode-row'+(m==='all'?' all-mode':'');
-    row.innerHTML=`<div class="icon">${icon}</div><div class="txt"><h3>${h}</h3><p>${p}</p></div><div class="m-stage">STAGE ${si+1}</div>`;
-    row.onclick=()=>startGame(m,g);
-    ml.appendChild(row);
+    const row=document.createElement('div');row.className='mode-row';
+    row.innerHTML=`<div class="icon">${icon}</div><div class="txt"><h3>${h}</h3><p>${p}</p></div>
+      <div class="m-stage">STAGE ${si+1}</div>
+      <button class="reset-btn" onclick="event.stopPropagation();resetMode('${g}','${m}',this.closest('.mode-row'))">리셋</button>`;
+    row.onclick=()=>startGame(m,g);ml.appendChild(row);
   });
   showScreen('sc-grade');
 }
-
-// ═══════════════════════════════════════════
-//  GAME STATE
-// ═══════════════════════════════════════════
-let G={};
-function freshG(mode,grade){
-  const si=loadStageIdx(grade,mode);
-  return{
-    mode,grade,stageIdx:si,
-    remaining:[],cleared:[],
-    wordStats:{}, // key→{word,correct,wrong,firstTry}
-    current:null,
-    score:0,stageScore:0,
-    streak:0,maxStreak:0,
-    totalCorrect:0,totalWrong:0,
-    lastMilestone:0,
-    hintUsed:false,waiting:false,
-    fromAnalysis:false,
-  };
+function resetMode(g,m,row){
+  if(!confirm(`이 모드의 스테이지를 초기화할까요?`))return;
+  saveStageIdx(g,m,0);
+  const stage=row.querySelector('.m-stage');if(stage)stage.textContent='STAGE 1';
 }
 
-// ═══════════════════════════════════════════
-//  BUILD POOL (100 words)
-// ═══════════════════════════════════════════
+// ═══════════════ GAME STATE ════════════════
+let G={};
+function freshG(mode,grade){
+  return{mode,grade,stageIdx:loadStageIdx(grade,mode),
+    remaining:[],cleared:[],wordStats:{},current:null,
+    choices:[],correctIdx:0,
+    score:0,stageScore:0,streak:0,maxStreak:0,
+    totalCorrect:0,totalWrong:0,lastMilestone:0,
+    hintUsed:false,waiting:false,eliminatedChoices:new Set()};
+}
+
+// ═══════════════ BUILD POOL ════════════════
 function buildItems(mode,grade){
   let base=[];
   const isIdiom=mode==='idiom-en-ko'||mode==='idiom-ko-en';
-  if(isIdiom){
-    base=IDIOMS.map(w=>({...w,lv:'idiom'}));
-  } else if(mode==='all'){
-    // 25 from each grade
-    const g=['mid3','high1','high2','high3'];
-    g.forEach(gr=>{
-      const pool=shuffle(POOL[gr]).slice(0,25);
-      pool.forEach(w=>base.push({...w,lv:gr}));
+  if(isIdiom){base=IDIOMS.map(w=>({...w,lv:'idiom'}));}
+  else if(mode==='all'){
+    ['mid3','high1','high2','high3'].forEach(gr=>{
+      shuffle(POOL[gr]).slice(0,25).forEach(w=>base.push({...w,lv:gr}));
     });
   } else {
     const src=grade?POOL[grade]:[...POOL.mid3,...POOL.high1,...POOL.high2,...POOL.high3];
-    const pool=shuffle(src).slice(0,100);
-    pool.forEach(w=>base.push({...w,lv:grade||w.lv||'mid3'}));
+    shuffle(src).slice(0,100).forEach(w=>base.push({...w,lv:grade||'mid3'}));
   }
-  // Apply direction
   const dirs=[];
   if(mode==='en-ko'||mode==='idiom-en-ko')base.forEach(w=>dirs.push({...w,dir:'en-ko'}));
   else if(mode==='ko-en'||mode==='idiom-ko-en')base.forEach(w=>dirs.push({...w,dir:'ko-en'}));
-  else{
-    base.forEach(w=>{dirs.push({...w,dir:'en-ko'});dirs.push({...w,dir:'ko-en'});});
-    // For 'all' mode with directions, pick 50 en-ko + 50 ko-en from the 100 base
-    return shuffle(dirs).slice(0,100);
-  }
+  else{base.forEach(w=>{dirs.push({...w,dir:'en-ko'});dirs.push({...w,dir:'ko-en'});});
+    return shuffle(dirs).slice(0,100);}
   return shuffle(dirs);
 }
-
 function startStage(){
-  const items=buildItems(G.mode,G.grade);
-  G.remaining=items;
-  G.cleared=[];
-  G.stageScore=0;
-  G.lastMilestone=0;
+  G.remaining=buildItems(G.mode,G.grade);
+  G.cleared=[];G.stageScore=0;G.lastMilestone=0;
 }
 
-// ═══════════════════════════════════════════
-//  START GAME
-// ═══════════════════════════════════════════
+// ═══════════════ START GAME ════════════════
 function startGame(mode,grade){
-  G=freshG(mode,grade);
-  startStage();
-  const gradeStr=grade?GRADE_INFO[grade].name:'종합';
-  document.getElementById('quiz-nav-t').textContent=`${gradeStr} · ${MODE_LABEL[mode]}`;
-  showScreen('sc-quiz');
-  renderQ();
+  checkNameAndStart(()=>{
+    G=freshG(mode,grade);startStage();
+    const gs=grade?GRADE_INFO[grade].name:'종합';
+    document.getElementById('quiz-nav-t').textContent=`${gs} · ${MODE_LABEL[mode]}`;
+    showScreen('sc-quiz');renderQ();
+  });
 }
 
-// ═══════════════════════════════════════════
-//  RENDER QUESTION
-// ═══════════════════════════════════════════
+// ═══════════════ GENERATE 5 CHOICES ════════════════
+function getAnswerText(item){return item.dir==='en-ko'?item.ko:item.en;}
+function generateChoices(item){
+  const correct=getAnswerText(item);
+  // Build pool of wrong answers from same direction
+  const allItems=[...POOL.mid3,...POOL.high1,...POOL.high2,...POOL.high3,...IDIOMS];
+  let pool=allItems.filter(w=>{
+    const t=item.dir==='en-ko'?w.ko:w.en;
+    return t!==correct&&t!==getAnswerText(item);
+  });
+  pool=shuffle(pool);
+  const wrongs=[];const seen=new Set([correct]);
+  for(const w of pool){
+    const t=item.dir==='en-ko'?w.ko:w.en;
+    if(!seen.has(t)){seen.add(t);wrongs.push(t);}
+    if(wrongs.length>=4)break;
+  }
+  const choices=shuffle([correct,...wrongs.slice(0,4)]);
+  const ci=choices.indexOf(correct);
+  return{choices,correctIdx:ci};
+}
+
+// ═══════════════ RENDER QUESTION ════════════════
 function getMult(){
   if(G.streak>=10)return 4;if(G.streak>=7)return 3;
   if(G.streak>=5)return 2;if(G.streak>=3)return 1.5;return 1;
 }
-
 function renderQ(){
-  G.waiting=false;
-  if(G.remaining.length===0){
-    // All cleared!
-    showClear();return;
-  }
+  G.waiting=false;G.hintUsed=false;G.eliminatedChoices=new Set();
+  if(G.remaining.length===0){showClear();return;}
   G.current=G.remaining[0];
-  G.hintUsed=false;
+  const item=G.current;
+  const{choices,correctIdx}=generateChoices(item);
+  G.choices=choices;G.correctIdx=correctIdx;
 
   const total=G.cleared.length+G.remaining.length;
   const cleared=G.cleared.length;
-  const pct=(cleared/total)*100;
-
   document.getElementById('hud-stage').textContent=`STAGE ${G.stageIdx+1}`;
   document.getElementById('hud-score').textContent=G.score.toLocaleString();
   const hg=document.getElementById('hud-grade');
-  if(G.grade){hg.textContent=GRADE_INFO[G.grade].name;hg.className='hud-pill hud-grade '+G.grade;}
-  else{hg.textContent=MODE_LABEL[G.mode];hg.className='hud-pill hud-grade mixed';}
+  if(G.grade){hg.textContent=GRADE_INFO[G.grade].name;}
+  else{hg.textContent=MODE_LABEL[G.mode];}
 
-  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-fill').style.width=(cleared/total*100)+'%';
   document.getElementById('prog-l').textContent=`STAGE ${G.stageIdx+1} · ${total}개 완주 도전!`;
   document.getElementById('prog-r').textContent=`${cleared} / ${total} 완료`;
   document.getElementById('q-remain').textContent=`남은 단어 ${G.remaining.length}개`;
@@ -879,72 +977,49 @@ function renderQ(){
   const sr=document.getElementById('streak-row');
   sr.innerHTML=G.streak>=3?`<span class="streak-chip">🔥 ${G.streak}연속 &nbsp;×${getMult()}</span>`:'';
 
-  document.getElementById('q-card').className='q-card';
-  const item=G.current;
-  const lvb=document.getElementById('q-lv-badge');
-  lvb.className='q-lv-badge '+(item.lv||'mid3');
-  lvb.textContent=LV_LABEL[item.lv]||'단어';
+  document.getElementById('q-card').className='q-card glass';
+  document.getElementById('q-lv-badge').textContent=LV_LABEL[item.lv]||'단어';
+  document.getElementById('q-pos-badge').textContent=POS_KO[item.pos]||item.pos||'';
   document.getElementById('q-dir').textContent=item.dir==='en-ko'?'영어 → 한글':'한글 → 영어';
   document.getElementById('q-text').textContent=item.dir==='en-ko'?item.en:item.ko;
   const fb=document.getElementById('q-feedback');fb.textContent='';fb.className='q-feedback';
+
   document.getElementById('s-c').textContent=G.totalCorrect;
   document.getElementById('s-w').textContent=G.totalWrong;
   document.getElementById('s-s').textContent=G.maxStreak;
-  const m=getMult();document.getElementById('s-p').textContent=m===1?'1×':`${m}×`;
-  const inp=document.getElementById('answer-input');
-  inp.value='';inp.disabled=false;inp.className='answer-input';
-  inp.placeholder=item.dir==='en-ko'?'한글 뜻을 입력하세요':'영어 단어를 입력하세요';
-  document.getElementById('hint-btn').textContent='💡 힌트';
-  setTimeout(()=>inp.focus(),40);
+  document.getElementById('s-p').textContent=getMult()===1?'1×':`${getMult()}×`;
+
+  const labels=['A','B','C','D','E'];
+  choices.forEach((ch,i)=>{
+    const btn=document.getElementById('ch'+i);
+    const txt=document.getElementById('cht'+i);
+    btn.className='choice-btn';btn.disabled=false;
+    document.querySelector(`#ch${i} .ch-label`).textContent=labels[i];
+    txt.textContent=ch;
+  });
+  document.getElementById('hint-btn').textContent='💡 힌트 (오답 2개 제거)';
 }
 
-// ═══════════════════════════════════════════
-//  ANSWER CHECK
-// ═══════════════════════════════════════════
-function nKo(s){return s.replace(/[\s~!@#$%^&*()\-_+=\[\]{};:'",.<>\/?\\|]/g,'').toLowerCase();}
-function nEn(s){return s.trim().toLowerCase().replace(/\s+/g,' ');}
-function checkAns(inp,item){
-  const r=inp.trim();if(!r)return false;
-  if(item.dir==='en-ko'){
-    const n=nKo(r);
-    return item.ko.split(',').map(p=>nKo(p)).some(p=>p===n||(p.includes(n)&&n.length>=2));
-  }
-  return nEn(r)===nEn(item.en);
-}
-
-// ═══════════════════════════════════════════
-//  WORD STATS TRACKING
-// ═══════════════════════════════════════════
-function trackWord(item,isCorrect){
-  const key=item.en+'_'+item.dir;
-  if(!G.wordStats[key])G.wordStats[key]={word:item,correct:0,wrong:0,firstTry:null};
-  const s=G.wordStats[key];
-  if(s.firstTry===null)s.firstTry=isCorrect;
-  if(isCorrect)s.correct++;else s.wrong++;
-}
-
-// ═══════════════════════════════════════════
-//  SUBMIT
-// ═══════════════════════════════════════════
-function submitAnswer(){
+// ═══════════════ SELECT CHOICE ════════════════
+function selectChoice(idx){
   if(G.waiting)return;
-  const inp=document.getElementById('answer-input');
-  if(!inp.value.trim())return;
-  G.waiting=true;inp.disabled=true;
+  if(G.eliminatedChoices.has(idx))return;
+  G.waiting=true;
+  // Disable all
+  for(let i=0;i<5;i++){document.getElementById('ch'+i).disabled=true;}
 
-  const item=G.current;
-  const ok=checkAns(inp.value,item);
+  const item=G.current;const ok=(idx===G.correctIdx);
+  trackWord(item,ok);
   const card=document.getElementById('q-card');
   const fb=document.getElementById('q-feedback');
-  trackWord(item,ok);
+
+  // Highlight correct always
+  document.getElementById('ch'+G.correctIdx).classList.add('correct');
 
   if(ok){
-    const m=getMult(),pts=Math.round(100*m+(G.hintUsed?0:20));
-    G.score+=pts;G.stageScore+=pts;
-    G.streak++;G.maxStreak=Math.max(G.maxStreak,G.streak);
-    G.totalCorrect++;
-    G.remaining.shift();
-    G.cleared.push(item);
+    const m=getMult();const pts=Math.round(100*m+(G.hintUsed?0:20));
+    G.score+=pts;G.stageScore+=pts;G.streak++;G.maxStreak=Math.max(G.maxStreak,G.streak);
+    G.totalCorrect++;G.remaining.shift();G.cleared.push(item);
     card.classList.add('correct');
     fb.textContent='✓ 정답!';fb.className='q-feedback ok';
     showFloat(pts);
@@ -952,28 +1027,48 @@ function submitAnswer(){
     document.getElementById('s-c').textContent=G.totalCorrect;
     document.getElementById('s-s').textContent=G.maxStreak;
     checkMilestone();
-    if(G.remaining.length===0){setTimeout(showClear,600);return;}
-    setTimeout(renderQ,600);
+    if(G.remaining.length===0){setTimeout(showClear,700);return;}
+    setTimeout(renderQ,700);
   } else {
+    document.getElementById('ch'+idx).classList.add('wrong');
     G.streak=0;G.totalWrong++;
-    const ans=item.dir==='en-ko'?item.ko:item.en;
     card.classList.add('wrong');
-    fb.innerHTML=`✗ 틀렸어요 | 정답: <b style="color:var(--green)">${ans}</b>`;
-    fb.className='q-feedback err';
-    inp.className='answer-input shake';
-    // Wrong: move to random position within next 3-7
+    fb.textContent='✗ 틀렸어요 — 정답이 초록색으로 표시됩니다';fb.className='q-feedback err';
     G.remaining.shift();
     const pos=Math.min(G.remaining.length,Math.floor(Math.random()*5)+3);
     G.remaining.splice(pos,0,item);
     document.getElementById('s-w').textContent=G.totalWrong;
     document.getElementById('s-p').textContent='1×';
-    setTimeout(renderQ,1400);
+    // Show correct answer for 1 second then next
+    setTimeout(renderQ,1100);
   }
 }
 
-// ═══════════════════════════════════════════
-//  MILESTONE TOASTS
-// ═══════════════════════════════════════════
+// ═══════════════ WORD STATS ════════════════
+function trackWord(item,ok){
+  const key=item.en+'_'+item.dir;
+  if(!G.wordStats[key])G.wordStats[key]={word:item,correct:0,wrong:0,firstTry:null};
+  const s=G.wordStats[key];
+  if(s.firstTry===null)s.firstTry=ok;
+  if(ok)s.correct++;else s.wrong++;
+}
+
+// ═══════════════ HINT — eliminate 2 wrong ════════════════
+function useHint(){
+  if(G.waiting||G.hintUsed)return;
+  G.hintUsed=true;G.score=Math.max(0,G.score-50);
+  document.getElementById('hud-score').textContent=G.score.toLocaleString();
+  document.getElementById('hint-btn').textContent='💡 힌트 사용됨 (-50pt)';
+  // Eliminate 2 wrong choices
+  const wrongs=[];
+  for(let i=0;i<5;i++){if(i!==G.correctIdx&&!G.eliminatedChoices.has(i))wrongs.push(i);}
+  shuffle(wrongs).slice(0,2).forEach(i=>{
+    G.eliminatedChoices.add(i);
+    document.getElementById('ch'+i).classList.add('eliminated');
+  });
+}
+
+// ═══════════════ MILESTONE ════════════════
 function checkMilestone(){
   const cleared=G.cleared.length;
   const ms=[10,20,30,40,50,60,70,80,90];
@@ -981,71 +1076,34 @@ function checkMilestone(){
     if(cleared>=m&&G.lastMilestone<m){
       G.lastMilestone=m;
       const msgs=MILESTONES[m];
-      showToast(msgs[Math.floor(Math.random()*msgs.length)]);
-      break;
+      showToast(msgs[Math.floor(Math.random()*msgs.length)]);break;
     }
   }
 }
-
 function showToast(msg){
   const t=document.getElementById('milestone-toast');
-  t.textContent=msg;
-  t.classList.remove('hide');t.classList.add('show');
+  t.textContent=msg;t.classList.remove('hide');t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');t.classList.add('hide');},2800);
 }
 
-// ═══════════════════════════════════════════
-//  HINT / SKIP
-// ═══════════════════════════════════════════
-function useHint(){
-  if(G.waiting||G.hintUsed)return;
-  G.hintUsed=true;G.score=Math.max(0,G.score-50);
-  document.getElementById('hud-score').textContent=G.score.toLocaleString();
-  const item=G.current;
-  const ans=item.dir==='en-ko'?item.ko:item.en;
-  document.getElementById('hint-btn').textContent=`💡 "${ans.slice(0,Math.ceil(ans.length*.4))}..."`;
-  document.getElementById('answer-input').focus();
-}
-function skipQ(){
-  if(G.waiting)return;
-  G.streak=0;G.totalWrong++;
-  const item=G.current;
-  const ans=item.dir==='en-ko'?item.ko:item.en;
-  document.getElementById('q-feedback').innerHTML=`건너뜀 | 정답: <b style="color:var(--green)">${ans}</b>`;
-  document.getElementById('q-feedback').className='q-feedback err';
-  document.getElementById('s-w').textContent=G.totalWrong;
-  document.getElementById('s-p').textContent='1×';
-  trackWord(item,false);
-  G.remaining.shift();
-  const pos=Math.min(G.remaining.length,Math.floor(Math.random()*5)+3);
-  G.remaining.splice(pos,0,item);
-  G.waiting=true;document.getElementById('answer-input').disabled=true;
-  setTimeout(renderQ,1200);
-}
-
-// ═══════════════════════════════════════════
-//  FLOAT POINTS
-// ═══════════════════════════════════════════
+// ═══════════════ FLOAT POINTS ════════════════
 function showFloat(pts){
   const el=document.createElement('div');el.className='float-pt';
   el.style.left=(15+Math.random()*60)+'%';el.style.top=(20+Math.random()*25)+'%';
-  el.style.color=pts>=300?'#ffcf40':pts>=200?'#ffab4f':'#00e0a0';
+  el.style.color=pts>=300?'var(--gold)':pts>=200?'var(--orange)':'var(--green)';
   el.textContent=`+${pts}${G.streak>=3?' 🔥':''}`;
   document.body.appendChild(el);setTimeout(()=>el.remove(),900);
 }
 
-// ═══════════════════════════════════════════
-//  STAGE CLEAR
-// ═══════════════════════════════════════════
+// ═══════════════ STAGE CLEAR ════════════════
 function showClear(){
-  const total=G.totalCorrect+G.totalWrong;
-  const r=calcRank(G.totalCorrect,total);
-  const bonus=Math.round(G.stageScore*.2);
-  G.score+=bonus;
+  const total=G.totalCorrect+G.totalWrong;const r=calcRank(G.totalCorrect,total);
+  const bonus=Math.round(G.stageScore*.2);G.score+=bonus;
   const newIdx=Math.min(G.stageIdx+1,MAX_STAGE-1);
   saveStageIdx(G.grade,G.mode,newIdx>G.stageIdx?newIdx:G.stageIdx);
   appendSession({mode:G.mode,grade:G.grade,score:G.score,correct:G.totalCorrect,
-    wrong:G.totalWrong,maxStreak:G.maxStreak,stageAt:G.stageIdx+1,stageClear:G.stageIdx+1,rank:r.rank,time:Date.now()});
+    wrong:G.totalWrong,maxStreak:G.maxStreak,stageAt:G.stageIdx+1,stageClear:true,rank:r.rank,time:Date.now()});
+  updateRanking(getPlayerName(),G.score,G.totalCorrect,G.totalWrong);
 
   document.getElementById('ov-emoji').textContent=r.emoji;
   document.getElementById('ov-title').textContent=`${G.cleared.length}개 완주! STAGE ${G.stageIdx+1} 클리어!`;
@@ -1056,189 +1114,120 @@ function showClear(){
   document.getElementById('ov-sc').textContent=G.totalCorrect;
   document.getElementById('ov-sw').textContent=G.totalWrong;
   document.getElementById('ov-ss').textContent=G.maxStreak;
-
   const nb=document.getElementById('ov-next-btn');
-  if(G.stageIdx>=MAX_STAGE-1){nb.textContent='🏆 STAGE 10 완주! 처음부터';nb.onclick=()=>{document.getElementById('ov-clear').classList.remove('show');G.stageIdx=0;saveStageIdx(G.grade,G.mode,0);startStage();renderQ();};}
+  if(G.stageIdx>=MAX_STAGE-1){nb.textContent='🏆 처음부터';nb.onclick=()=>{document.getElementById('ov-clear').classList.remove('show');G.stageIdx=0;saveStageIdx(G.grade,G.mode,0);startStage();renderQ();};}
   else{nb.textContent=`STAGE ${G.stageIdx+2}로 →`;nb.onclick=nextStage;}
   document.getElementById('ov-clear').classList.add('show');
 }
-
-function nextStage(){
-  document.getElementById('ov-clear').classList.remove('show');
-  G.stageIdx++;startStage();renderQ();
-}
+function nextStage(){document.getElementById('ov-clear').classList.remove('show');G.stageIdx++;startStage();renderQ();}
 function replayStage(){
   document.getElementById('ov-clear').classList.remove('show');
   G.totalCorrect=0;G.totalWrong=0;G.streak=0;G.maxStreak=0;G.wordStats={};G.lastMilestone=0;
   startStage();renderQ();
 }
 
-// ═══════════════════════════════════════════
-//  ANALYSIS
-// ═══════════════════════════════════════════
-function goAnalysisFromClear(){
-  document.getElementById('ov-clear').classList.remove('show');
-  G.fromAnalysis=true;
-  showAnalysis(false);
-}
-
+// ═══════════════ ANALYSIS ════════════════
+function goAnalysisFromClear(){document.getElementById('ov-clear').classList.remove('show');G.fromAnalysis=true;showAnalysis(false);}
 function showAnalysis(midSession){
-  const total=G.totalCorrect+G.totalWrong;
-  const r=calcRank(G.totalCorrect,total);
+  const total=G.totalCorrect+G.totalWrong;const r=calcRank(G.totalCorrect,total);
   const acc=total?Math.round(G.totalCorrect/total*100):0;
-
-  document.getElementById('an-rank').textContent=r.rank;
-  document.getElementById('an-rank').style.color=r.color;
+  document.getElementById('an-rank').textContent=r.rank;document.getElementById('an-rank').style.color=r.color;
   document.getElementById('an-rank-msg').textContent=r.msg;
   document.getElementById('an-title').textContent=midSession?'현재 세션 분석':'학습 결과 진단';
   document.getElementById('an-subtitle').textContent=`정확도 ${acc}% · 총 시도 ${total}회`;
-  document.getElementById('an-correct').textContent=G.totalCorrect;
-  document.getElementById('an-wrong').textContent=G.totalWrong;
-  document.getElementById('an-acc').textContent=acc+'%';
-  document.getElementById('an-cleared').textContent=G.cleared.length;
-  document.getElementById('an-streak').textContent=G.maxStreak;
-  document.getElementById('an-score').textContent=G.score.toLocaleString();
-
-  // Categorize words
+  document.getElementById('an-correct').textContent=G.totalCorrect;document.getElementById('an-wrong').textContent=G.totalWrong;
+  document.getElementById('an-acc').textContent=acc+'%';document.getElementById('an-cleared').textContent=G.cleared.length;
+  document.getElementById('an-streak').textContent=G.maxStreak;document.getElementById('an-score').textContent=G.score.toLocaleString();
   const stats=Object.values(G.wordStats);
   const strong=stats.filter(s=>s.firstTry&&s.wrong===0);
-  const weak=stats.filter(s=>s.wrong>=2);
-  const review=stats.filter(s=>s.wrong===1);
-
-  // Diagnosis text
+  const weak=stats.filter(s=>s.wrong>=2);const review=stats.filter(s=>s.wrong===1);
   let diag='';
-  if(!total){diag='아직 학습 데이터가 없어요. 퀴즈를 진행하면 분석 결과가 표시됩니다.';}
-  else{
-    const strongPct=total?Math.round(strong.length/stats.length*100):0;
-    const weakPct=total?Math.round(weak.length/stats.length*100):0;
-    if(acc>=90)diag=`🌟 매우 우수한 성적이에요! 전체 단어의 ${strongPct}%를 첫 번에 정확히 맞혔어요. 현재 학습 수준이 매우 높습니다.`;
-    else if(acc>=75)diag=`💪 잘하고 있어요! 정확도가 ${acc}%로 양호합니다. ${weak.length}개 단어를 집중적으로 복습하면 더욱 향상될 거예요.`;
-    else if(acc>=60)diag=`📖 기초는 탄탄해요. 하지만 ${weak.length}개의 취약 단어가 있어요. 아래 목록을 꼭 복습해보세요.`;
-    else diag=`📚 기초 단어 암기에 더 집중이 필요해요. 취약 단어 ${weak.length}개를 우선적으로 반복 학습하는 것을 추천합니다.`;
-
-    if(weak.length>0)diag+=`\n\n⚠️ 취약 단어 (${weak.length}개): 여러 번 틀린 단어들로, 집중 복습이 필요합니다.`;
-    if(review.length>0)diag+=`\n🔄 복습 필요 (${review.length}개): 한 번 틀린 단어들입니다. 다시 한번 확인하세요.`;
-    if(strong.length>0)diag+=`\n✅ 강점 단어 (${strong.length}개): 첫 번에 정확히 맞힌 단어들입니다.`;
-  }
+  if(!total){diag='아직 학습 데이터가 없어요.';}
+  else if(acc>=90)diag=`🌟 매우 우수해요! 전체의 ${Math.round(strong.length/Math.max(stats.length,1)*100)}%를 첫 번에 정답했어요.`;
+  else if(acc>=75)diag=`💪 잘하고 있어요! 정확도 ${acc}%. ${weak.length}개 단어를 집중 복습하면 더 좋아질 거예요.`;
+  else if(acc>=60)diag=`📖 기초는 탄탄해요. ${weak.length}개 취약 단어를 꼭 복습해보세요.`;
+  else diag=`📚 취약 단어 ${weak.length}개를 우선 반복 학습하는 것을 추천합니다.`;
+  if(weak.length)diag+=`\n\n⚠️ 취약 단어 ${weak.length}개: 집중 복습이 필요합니다.`;
+  if(review.length)diag+=`\n🔄 복습 필요 ${review.length}개: 한 번 더 확인하세요.`;
+  if(strong.length)diag+=`\n✅ 강점 단어 ${strong.length}개: 첫 번에 정답한 단어들입니다.`;
   document.getElementById('an-diagnosis').style.whiteSpace='pre-line';
   document.getElementById('an-diagnosis').textContent=diag;
-
-  // Word chips
   const renderChips=(id,list,cls)=>{
     const el=document.getElementById(id);el.innerHTML='';
     if(!list.length){el.innerHTML='<span class="no-words">해당 없음</span>';return;}
-    list.forEach(s=>{
-      const chip=document.createElement('span');chip.className='word-chip '+cls;
+    list.forEach(s=>{const chip=document.createElement('span');chip.className='word-chip '+cls;
       chip.textContent=s.word.dir==='en-ko'?s.word.en:s.word.ko;
-      chip.title=s.word.dir==='en-ko'?s.word.ko:s.word.en;
-      el.appendChild(chip);
-    });
+      chip.title=s.word.dir==='en-ko'?s.word.ko:s.word.en;el.appendChild(chip);});
   };
-  renderChips('an-weak-words',weak,'chip-weak');
-  renderChips('an-review-words',review,'chip-review');
-  renderChips('an-strong-words',strong,'chip-strong');
-
-  // Bar chart: grade distribution
+  renderChips('an-weak-words',weak,'chip-weak');renderChips('an-review-words',review,'chip-review');renderChips('an-strong-words',strong,'chip-strong');
   const barWrap=document.getElementById('an-bar-wrap');barWrap.innerHTML='';
   const lvs=['mid3','high1','high2','high3','idiom'];
-  const lvColors={'mid3':'var(--green)','high1':'var(--primary)','high2':'var(--orange)','high3':'var(--red)','idiom':'var(--sec)'};
+  const lvColors={mid3:'var(--green)',high1:'var(--primary)',high2:'var(--orange)',high3:'var(--red)',idiom:'var(--sec)'};
   lvs.forEach(lv=>{
-    const lvStats=stats.filter(s=>s.word.lv===lv);
-    if(!lvStats.length)return;
-    const lvCorr=lvStats.reduce((a,s)=>a+s.correct,0);
-    const lvTotal=lvStats.reduce((a,s)=>a+s.correct+s.wrong,0);
+    const lvStats=stats.filter(s=>s.word.lv===lv);if(!lvStats.length)return;
+    const lvCorr=lvStats.reduce((a,s)=>a+s.correct,0);const lvTotal=lvStats.reduce((a,s)=>a+s.correct+s.wrong,0);
     const pct=lvTotal?Math.round(lvCorr/lvTotal*100):0;
     const row=document.createElement('div');row.className='bar-row';
     row.innerHTML=`<div class="bar-label">${LV_LABEL[lv]}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${lvColors[lv]||'var(--primary)'}"></div></div>
-      <div class="bar-val" style="color:${lvColors[lv]||'var(--primary)'}">${pct}%</div>`;
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${lvColors[lv]}"></div></div>
+      <div class="bar-val" style="color:${lvColors[lv]}">${pct}%</div>`;
     barWrap.appendChild(row);
   });
   if(!barWrap.children.length)barWrap.innerHTML='<span class="no-words">아직 데이터가 없어요</span>';
-
-  // Back button
-  const backBtn=document.getElementById('analysis-back-btn');
-  const actionBtn=document.getElementById('an-action-btn');
-  if(midSession){
-    backBtn.textContent='← 퀴즈로';backBtn.onclick=()=>showScreen('sc-quiz');
-    actionBtn.textContent='계속 학습하기';actionBtn.onclick=()=>showScreen('sc-quiz');
-  } else {
-    backBtn.textContent='← 홈';backBtn.onclick=()=>goHome();
-    actionBtn.textContent='다시 도전';actionBtn.onclick=()=>{replayStage();showScreen('sc-quiz');};
-  }
+  const backBtn=document.getElementById('analysis-back-btn');const actionBtn=document.getElementById('an-action-btn');
+  if(midSession){backBtn.textContent='← 퀴즈로';backBtn.onclick=()=>showScreen('sc-quiz');
+    actionBtn.textContent='계속 학습하기';actionBtn.onclick=()=>showScreen('sc-quiz');}
+  else{backBtn.textContent='← 홈';backBtn.onclick=()=>goHome();
+    actionBtn.textContent='다시 도전';actionBtn.onclick=()=>{replayStage();showScreen('sc-quiz');};}
   showScreen('sc-analysis');
 }
 
-// ═══════════════════════════════════════════
-//  SESSION END
-// ═══════════════════════════════════════════
+// ═══════════════ SESSION END ════════════════
 function endSession(){
-  if(G.totalCorrect>0)appendSession({mode:G.mode,grade:G.grade,score:G.score,correct:G.totalCorrect,
-    wrong:G.totalWrong,maxStreak:G.maxStreak,stageAt:G.stageIdx+1,rank:calcRank(G.totalCorrect,G.totalCorrect+G.totalWrong).rank,time:Date.now()});
+  document.getElementById('ov-clear').classList.remove('show');
+  if(G.totalCorrect>0){
+    appendSession({mode:G.mode,grade:G.grade,score:G.score,correct:G.totalCorrect,
+      wrong:G.totalWrong,maxStreak:G.maxStreak,stageAt:G.stageIdx+1,rank:calcRank(G.totalCorrect,G.totalCorrect+G.totalWrong).rank,time:Date.now()});
+    updateRanking(getPlayerName(),G.score,G.totalCorrect,G.totalWrong);
+  }
   goHome();
 }
 
-// ═══════════════════════════════════════════
-//  RECORDS
-// ═══════════════════════════════════════════
+// ═══════════════ RECORDS ════════════════
 function goRecords(){
   const wb=document.getElementById('week-bar');wb.innerHTML='';
   const days=['일','월','화','수','목','금','토'];
   const todayStr=new Date().toISOString().slice(0,10);
   for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
+    const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);
     const rec=loadDay('wq_day_'+ds);
     const col=document.createElement('div');col.className='day-col';
-    const has=rec&&rec.sessions&&rec.sessions.length>0;
-    const isToday=ds===todayStr;
+    const has=rec&&rec.sessions&&rec.sessions.length>0;const isToday=ds===todayStr;
     col.innerHTML=`<div class="day-label">${days[d.getDay()]}</div>
       <div class="day-dot${has?' has':''}${isToday?' today':''}">${has?rec.sessions.length:'·'}</div>`;
     wb.appendChild(col);
   }
-  const d=loadDay(todayKey());
-  const list=document.getElementById('rec-list');list.innerHTML='';
-  if(!d||!d.sessions.length){
-    list.innerHTML='<div style="color:var(--muted);font-size:.84rem;text-align:center;padding:12px">오늘 기록이 없어요</div>';
-  } else {
-    [...d.sessions].reverse().forEach(s=>{
-      const total=s.correct+s.wrong;
-      const acc=total?Math.round(s.correct/total*100):0;
-      const r=calcRank(s.correct,total);
-      const gradeStr=s.grade?GRADE_INFO[s.grade].name:'종합';
-      const li=document.createElement('div');li.className='rec-item';
-      li.innerHTML=`<div class="ri-grade">${r.emoji}</div>
-        <div class="ri-info"><h4>${gradeStr} · ${MODE_LABEL[s.mode]||s.mode}</h4>
-        <p>정답 ${s.correct} / 오답 ${s.wrong} · 정확도 ${acc}% · STAGE ${s.stageAt} · ${s.stageClear?'클리어':'진행중'}</p></div>
-        <div class="ri-score">${s.score.toLocaleString()}</div>`;
-      list.appendChild(li);
-    });
-  }
+  const d=loadDay(todayKey());const list=document.getElementById('rec-list');list.innerHTML='';
+  if(!d||!d.sessions.length){list.innerHTML='<div style="color:var(--muted);font-size:.84rem;text-align:center;padding:12px">오늘 기록이 없어요</div>';}
+  else{[...d.sessions].reverse().forEach(s=>{
+    const total=s.correct+s.wrong;const acc=total?Math.round(s.correct/total*100):0;
+    const r=calcRank(s.correct,total);const gradeStr=s.grade?GRADE_INFO[s.grade].name:'종합';
+    const li=document.createElement('div');li.className='rec-item glass';
+    li.innerHTML=`<div class="ri-grade">${r.emoji}</div>
+      <div class="ri-info"><h4>${gradeStr} · ${MODE_LABEL[s.mode]||s.mode}</h4>
+      <p>정답 ${s.correct} / 오답 ${s.wrong} · 정확도 ${acc}% · STAGE ${s.stageAt}</p></div>
+      <div class="ri-score">${s.score.toLocaleString()}</div>`;
+    list.appendChild(li);
+  });}
   showScreen('sc-records');
 }
 
-// ═══════════════════════════════════════════
-//  NAV
-// ═══════════════════════════════════════════
-function goHome(){
-  document.getElementById('ov-clear').classList.remove('show');
-  buildGradeGrid();renderTodayCard();showScreen('sc-home');
-}
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
+// ═══════════════ NAV ════════════════
+function goHome(){document.getElementById('ov-clear').classList.remove('show');buildGradeGrid();renderTodayCard();showScreen('sc-home');}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 
-// ═══════════════════════════════════════════
-//  KEYBOARD
-// ═══════════════════════════════════════════
-document.getElementById('answer-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitAnswer();});
-
-// ═══════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════
-buildGradeGrid();renderTodayCard();
+// ═══════════════ INIT ════════════════
+makeBubbles();buildGradeGrid();renderTodayCard();
 </script>
 </body>
 </html>
