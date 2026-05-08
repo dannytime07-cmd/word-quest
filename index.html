@@ -207,16 +207,22 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .rec-item .ri-score{font-size:1rem;font-weight:800;color:var(--gold);}
 
 /* RANKING SCREEN */
-.rank-table{width:100%;display:flex;flex-direction:column;gap:8px;}
-.rank-row{padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .15s;}
-.rank-row.me{border-color:var(--gold);background:rgba(255,209,102,.15);}
-.rank-num{font-size:1.1rem;font-weight:900;width:28px;text-align:center;flex-shrink:0;}
+.rank-table{width:100%;display:flex;flex-direction:column;gap:10px;}
+.rank-row{padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:all .15s;}
+.rank-row.me{border-color:var(--gold)!important;background:rgba(255,209,102,.12);}
+.rank-top{display:flex;align-items:center;gap:12px;}
+.rank-num{font-size:1.2rem;font-weight:900;width:30px;text-align:center;flex-shrink:0;}
 .rank-num.top1{color:var(--gold);}
-.rank-num.top2{color:#c0c0c0;}
-.rank-num.top3{color:#cd7f32;}
-.rank-name{flex:1;font-weight:700;font-size:.9rem;}
-.rank-score{font-size:.95rem;font-weight:800;color:var(--gold);}
-.rank-acc{font-size:.72rem;color:var(--muted);text-align:right;}
+.rank-num.top2{color:#c8e8ff;}
+.rank-num.top3{color:#ffb347;}
+.rank-name{flex:1;font-weight:800;font-size:.95rem;}
+.rank-score{font-size:1rem;font-weight:900;color:var(--gold);flex-shrink:0;}
+.rank-bar-wrap{width:100%;height:8px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden;}
+.rank-bar-fill{height:100%;border-radius:8px;transition:width .6s ease;}
+.rank-stats{display:flex;gap:14px;font-size:.72rem;color:var(--muted);}
+.rank-stat-item{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.rank-stat-item .rsv{font-size:.85rem;font-weight:800;color:var(--text);}
+.rank-stat-item .rsl{font-size:.66rem;color:var(--muted);}
 
 /* ANALYSIS */
 .analysis-header{width:100%;padding:20px;text-align:center;}
@@ -799,16 +805,34 @@ function goRanking(){
   document.getElementById('my-name-lbl').textContent=me||'(이름 없음)';
   const r=loadRanking();
   const tbl=document.getElementById('rank-table');tbl.innerHTML='';
-  if(!r.length){tbl.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">아직 기록이 없어요</div>';showScreen('sc-ranking');return;}
+  if(!r.length){
+    tbl.innerHTML='<div style="text-align:center;color:var(--muted);padding:24px">아직 등록된 플레이어가 없어요.<br>게임을 완료하면 자동으로 등록됩니다!</div>';
+    showScreen('sc-ranking');return;
+  }
+  const topScore=r[0].score||1;
+  const barColors=['linear-gradient(90deg,#ffd700,#ffb300)','linear-gradient(90deg,#a8d8ff,#6ab4ff)','linear-gradient(90deg,#ffb347,#ff8c00)',
+    'linear-gradient(90deg,var(--green),#00b87a)','linear-gradient(90deg,var(--sec),#d4609a)'];
   r.forEach((p,i)=>{
+    const total=p.correct+p.wrong;
+    const pct=Math.round(p.score/topScore*100);
+    const numClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}위`;
+    const barColor=barColors[i]||'linear-gradient(90deg,var(--primary),#3a8fd4)';
     const row=document.createElement('div');
     row.className='rank-row glass'+(p.name===me?' me':'');
-    const numClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
-    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-    row.innerHTML=`<div class="rank-num ${numClass}">${medal||i+1}</div>
-      <div class="rank-name">${p.name}${p.name===me?' ⬅️ 나':''}</div>
-      <div style="text-align:right"><div class="rank-score">${p.score.toLocaleString()}pt</div>
-      <div class="rank-acc">${p.acc}% 정확도</div></div>`;
+    row.innerHTML=`
+      <div class="rank-top">
+        <div class="rank-num ${numClass}">${medal}</div>
+        <div class="rank-name">${p.name}${p.name===me?' <span style="font-size:.7rem;color:var(--gold)">◀ 나</span>':''}</div>
+        <div class="rank-score">${p.score.toLocaleString()}pt</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <div class="rank-stats">
+        <div class="rank-stat-item"><div class="rsv" style="color:var(--green)">${p.correct}</div><div class="rsl">정답</div></div>
+        <div class="rank-stat-item"><div class="rsv" style="color:var(--red)">${p.wrong}</div><div class="rsl">오답</div></div>
+        <div class="rank-stat-item"><div class="rsv" style="color:var(--primary)">${p.acc}%</div><div class="rsl">정확도</div></div>
+        <div class="rank-stat-item"><div class="rsv" style="color:var(--muted)">${total}</div><div class="rsl">총 문제</div></div>
+      </div>`;
     tbl.appendChild(row);
   });
   showScreen('sc-ranking');
