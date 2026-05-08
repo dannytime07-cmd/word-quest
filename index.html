@@ -349,9 +349,11 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <h3>📅 오늘의 학습 기록 <span id="today-date-lbl" style="color:var(--primary)"></span></h3>
     <div id="today-body"></div>
   </div>
-  <div style="width:100%;display:flex;gap:10px;justify-content:flex-end;">
+  <div style="width:100%;display:flex;gap:10px;justify-content:flex-end;align-items:center;flex-wrap:wrap;">
+    <span id="home-name-lbl" style="font-size:.78rem;color:rgba(255,255,255,.6);margin-right:auto;"></span>
     <button class="sm-btn" onclick="goRanking()">🏆 랭킹</button>
     <button class="sm-btn" onclick="goRecords()">📊 전체 기록</button>
+    <button class="sm-btn" onclick="changeName()">✏️ 이름 변경</button>
   </div>
 </div>
 
@@ -732,7 +734,8 @@ function calcRank(c,t){
 }
 
 // ═══════════════ LOCALSTORAGE ════════════════
-function todayKey(){return'wq_day_'+new Date().toISOString().slice(0,10);}
+function namePrefix(){const n=getPlayerName();return n?'wq_'+n+'_':'wq_guest_';}
+function todayKey(){return namePrefix()+'day_'+new Date().toISOString().slice(0,10);}
 function loadDay(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
 function saveDay(k,d){localStorage.setItem(k,JSON.stringify(d));}
 function appendSession(s){
@@ -742,7 +745,7 @@ function appendSession(s){
   d.totalWrong+=s.wrong;d.bestStreak=Math.max(d.bestStreak,s.maxStreak);
   saveDay(k,d);
 }
-function stageKey(g,m){return'wq_stg_'+(g||'null')+'_'+m;}
+function stageKey(g,m){return namePrefix()+'stg_'+(g||'null')+'_'+m;}
 function loadStageIdx(g,m){return parseInt(localStorage.getItem(stageKey(g,m))||'0');}
 function saveStageIdx(g,m,i){localStorage.setItem(stageKey(g,m),i);}
 
@@ -778,10 +781,11 @@ function saveName(){
 document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
 function changeName(){
   localStorage.removeItem('wq_player_name');
+  G={};
   document.getElementById('name-modal').classList.add('show');
   document.getElementById('name-input').value='';
   document.getElementById('name-input').focus();
-  window._nameCallback=()=>{goRanking();};
+  window._nameCallback=()=>{buildGradeGrid();renderTodayCard();showScreen('sc-home');};
 }
 function goRanking(){
   const me=getPlayerName();
@@ -1040,7 +1044,7 @@ function selectChoice(idx){
     document.getElementById('s-w').textContent=G.totalWrong;
     document.getElementById('s-p').textContent='1×';
     // Show correct answer for 1 second then next
-    setTimeout(renderQ,1100);
+    setTimeout(renderQ,3100);
   }
 }
 
@@ -1223,11 +1227,20 @@ function goRecords(){
 }
 
 // ═══════════════ NAV ════════════════
-function goHome(){document.getElementById('ov-clear').classList.remove('show');buildGradeGrid();renderTodayCard();showScreen('sc-home');}
+function goHome(){
+  document.getElementById('ov-clear').classList.remove('show');
+  const n=getPlayerName();
+  const lbl=document.getElementById('home-name-lbl');
+  if(lbl)lbl.textContent=n?'👤 '+n:'';
+  buildGradeGrid();renderTodayCard();showScreen('sc-home');
+}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 
 // ═══════════════ INIT ════════════════
-makeBubbles();buildGradeGrid();renderTodayCard();
+makeBubbles();
+const _n=getPlayerName();
+if(_n){const lbl=document.getElementById('home-name-lbl');if(lbl)lbl.textContent='👤 '+_n;}
+buildGradeGrid();renderTodayCard();
 </script>
 </body>
 </html>
