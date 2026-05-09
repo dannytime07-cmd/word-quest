@@ -206,22 +206,46 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .sv.s{color:var(--gold);}
 .sv.p{color:var(--primary);}
 
+/* ACTION BAR */
+.action-bar{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
+.action-btn{background:rgba(255,255,255,.1);border:1.5px solid var(--border);border-radius:14px;
+  padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;transition:all .18s;backdrop-filter:blur(10px);}
+.action-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-2px);}
+.action-btn.danger{background:rgba(255,60,60,.12);border-color:rgba(255,80,80,.35);}
+.action-btn.danger:hover{background:rgba(255,60,60,.22);}
+.action-btn span{font-size:.62rem;color:var(--text);font-weight:600;letter-spacing:-.2px;white-space:nowrap;}
+
 /* RECORDS */
-.week-bar{width:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-.day-col{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.day-label{font-size:.65rem;color:var(--muted);}
-.day-dot{width:100%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.1);
-  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;font-weight:700;color:var(--muted);}
-.day-dot.has{background:rgba(110,231,255,.2);border-color:var(--primary);color:var(--primary);}
-.day-dot.today{border-color:var(--gold);color:var(--gold);background:rgba(255,209,102,.15);}
+.period-tabs{width:100%;display:flex;gap:5px;background:rgba(255,255,255,.08);
+  border-radius:12px;padding:4px;border:1px solid var(--border);}
+.period-tab{flex:1;padding:7px 4px;border-radius:9px;border:none;background:transparent;
+  color:var(--muted);font-size:.8rem;font-weight:700;cursor:pointer;transition:all .15s;}
+.period-tab.active{background:rgba(255,255,255,.22);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.rec-summary{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.rec-sum-card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);
+  border-radius:12px;padding:12px 6px;text-align:center;}
+.rec-sum-val{font-size:1.05rem;font-weight:800;}
+.rec-sum-lbl{font-size:.6rem;color:var(--muted);margin-top:2px;}
+.rec-chart-wrap{width:100%;padding:14px 16px;}
+.rec-chart-title{font-size:.72rem;color:var(--muted);margin-bottom:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;}
+.rec-chart{display:flex;align-items:flex-end;gap:3px;height:80px;}
+.rc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;}
+.rc-bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:height .4s ease;}
+.rc-label{font-size:.52rem;color:var(--muted);text-align:center;line-height:1.1;}
+.rec-analysis{width:100%;padding:14px 16px;}
+.rec-analysis h3{font-size:.78rem;font-weight:700;margin-bottom:10px;color:var(--primary);}
+.rec-analysis-row{display:flex;justify-content:space-between;align-items:center;
+  padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.78rem;}
+.rec-analysis-row:last-child{border-bottom:none;}
+.rec-analysis-row span:first-child{color:var(--muted);}
 .rec-list{width:100%;display:flex;flex-direction:column;gap:8px;}
-.rec-item{padding:14px 16px;display:flex;align-items:center;gap:12px;}
-.rec-item .ri-grade{font-size:1.5rem;flex-shrink:0;}
-.rec-item .ri-info{flex:1;}
-.rec-item .ri-info h4{font-size:.88rem;font-weight:700;}
-.rec-item .ri-info p{font-size:.74rem;color:var(--muted);margin-top:2px;}
-.rec-item .ri-score{font-size:1rem;font-weight:800;color:var(--gold);}
+.rec-item{padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.rec-item .ri-grade{font-size:1.4rem;flex-shrink:0;}
+.rec-item .ri-info{flex:1;min-width:0;}
+.rec-item .ri-info h4{font-size:.84rem;font-weight:700;}
+.rec-item .ri-info p{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.rec-item .ri-score{font-size:.95rem;font-weight:800;color:var(--gold);flex-shrink:0;}
 
 /* RANKING SCREEN */
 .rank-table{width:100%;display:flex;flex-direction:column;gap:10px;}
@@ -468,12 +492,73 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <h3>📅 오늘의 학습 기록 <span id="today-date-lbl" style="color:var(--primary)"></span></h3>
     <div id="today-body"></div>
   </div>
-  <div style="width:100%;display:flex;gap:10px;justify-content:flex-end;align-items:center;flex-wrap:wrap;">
-    <span id="home-name-lbl" style="font-size:.78rem;color:rgba(255,255,255,.6);margin-right:auto;"></span>
-    <button class="sm-btn" onclick="goRanking()">🏆 랭킹</button>
-    <button class="sm-btn" onclick="goRecords()">📊 전체 기록</button>
-    <button class="sm-btn" onclick="changeName()">✏️ 이름 변경</button>
-    <button class="sm-btn" style="background:rgba(255,80,80,.2);border-color:rgba(255,80,80,.5);" onclick="deleteAccount()">🗑️ 계정 삭제</button>
+  <div style="width:100%;display:flex;align-items:center;padding:2px 0 4px;">
+    <span id="home-name-lbl" style="font-size:.78rem;color:rgba(255,255,255,.6);"></span>
+  </div>
+  <div class="action-bar">
+    <button class="action-btn" onclick="goRanking()">
+      <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="tr0" cx="35%" cy="25%" r="70%"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#d97706"/></radialGradient></defs>
+        <path d="M11 7 H25 V20 Q25 28 18 30 Q11 28 11 20 Z" fill="url(#tr0)"/>
+        <rect x="9" y="5" width="18" height="4" rx="2" fill="#fbbf24"/>
+        <rect x="9" y="5" width="18" height="2" rx="1" fill="rgba(255,255,255,.45)"/>
+        <path d="M11 11 Q5 11 5 17 Q5 21 11 21" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M25 11 Q31 11 31 17 Q31 21 25 21" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <rect x="15.5" y="29.5" width="5" height="3.5" rx="1" fill="#f59e0b"/>
+        <rect x="11" y="32.5" width="14" height="3" rx="1.5" fill="#fbbf24"/>
+        <rect x="11" y="32.5" width="14" height="1.5" rx="1" fill="rgba(255,255,255,.3)"/>
+        <ellipse cx="15" cy="13" rx="3" ry="5" fill="rgba(255,255,255,.28)" transform="rotate(-10 15 13)"/>
+        <ellipse cx="13.5" cy="11" rx="1.5" ry="2.5" fill="rgba(255,255,255,.42)" transform="rotate(-10 13.5 11)"/>
+      </svg>
+      <span>랭킹</span>
+    </button>
+    <button class="action-btn" onclick="goRecords()">
+      <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bc0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+          <linearGradient id="bc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+          <linearGradient id="bc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+        </defs>
+        <line x1="4" y1="30" x2="33" y2="30" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="5" y="22" width="7" height="8" rx="2" fill="url(#bc0)"/>
+        <rect x="5" y="22" width="7" height="3" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="15" y="14" width="7" height="16" rx="2" fill="url(#bc1)"/>
+        <rect x="15" y="14" width="7" height="3" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="25" y="7" width="7" height="23" rx="2" fill="url(#bc2)"/>
+        <rect x="25" y="7" width="7" height="3" rx="2" fill="rgba(255,255,255,.3)"/>
+      </svg>
+      <span>학습기록</span>
+    </button>
+    <button class="action-btn" onclick="changeName()">
+      <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="pc0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0284c7"/></linearGradient></defs>
+        <g transform="rotate(-45 18 18)">
+          <rect x="13" y="4" width="10" height="5" rx="2.5" fill="#fda4af"/>
+          <rect x="13" y="4" width="10" height="2" rx="1.5" fill="rgba(255,255,255,.5)"/>
+          <rect x="13" y="8.5" width="10" height="3" rx="1" fill="#94a3b8"/>
+          <rect x="13" y="8.5" width="10" height="1.5" rx="1" fill="rgba(255,255,255,.35)"/>
+          <rect x="13" y="11" width="10" height="18" fill="url(#pc0)"/>
+          <rect x="14" y="11" width="3" height="18" fill="rgba(255,255,255,.18)"/>
+          <path d="M13 29 L18 36 L23 29 Z" fill="#fde68a"/>
+          <polygon points="15.5,33 18,36 20.5,33" fill="#374151"/>
+        </g>
+      </svg>
+      <span>이름변경</span>
+    </button>
+    <button class="action-btn danger" onclick="deleteAccount()">
+      <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fca5a5"/><stop offset="100%" stop-color="#dc2626"/></linearGradient></defs>
+        <path d="M14 5 Q14 3 18 3 Q22 3 22 5" stroke="#f87171" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <rect x="7" y="8" width="22" height="4.5" rx="2.2" fill="#f87171"/>
+        <rect x="7" y="8" width="22" height="2" rx="1.5" fill="rgba(255,255,255,.35)"/>
+        <path d="M9.5 12.5 L11 32 Q11 34 13.5 34 H22.5 Q25 34 25 32 L26.5 12.5 Z" fill="url(#tsh)"/>
+        <line x1="15" y1="16" x2="15" y2="30" stroke="rgba(255,255,255,.35)" stroke-width="1.3"/>
+        <line x1="18" y1="16" x2="18" y2="30" stroke="rgba(255,255,255,.35)" stroke-width="1.3"/>
+        <line x1="21" y1="16" x2="21" y2="30" stroke="rgba(255,255,255,.35)" stroke-width="1.3"/>
+        <path d="M9.5 12.5 L11 31 Q11 32.5 12.5 33.5 L13.5 12.5 Z" fill="rgba(255,255,255,.16)"/>
+      </svg>
+      <span>계정삭제</span>
+    </button>
   </div>
 </div>
 
@@ -542,11 +627,21 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 <div class="screen" id="sc-records">
   <div class="nav-bar">
     <button class="nav-back" onclick="goHome()">← 홈</button>
-    <div class="nav-t">학습 기록</div>
+    <div class="nav-t">📊 학습기록</div>
     <div class="nav-sp"></div>
   </div>
-  <div class="week-bar" id="week-bar"></div>
-  <div class="sec-lbl">오늘의 세션</div>
+  <div class="period-tabs">
+    <button class="period-tab active" data-period="week" onclick="renderRecords('week',this)">1주일</button>
+    <button class="period-tab" data-period="month" onclick="renderRecords('month',this)">1달</button>
+    <button class="period-tab" data-period="year" onclick="renderRecords('year',this)">12달</button>
+  </div>
+  <div class="rec-summary" id="rec-summary"></div>
+  <div class="rec-chart-wrap glass">
+    <div class="rec-chart-title" id="rec-chart-title"></div>
+    <div class="rec-chart" id="rec-chart"></div>
+  </div>
+  <div class="rec-analysis glass" id="rec-analysis" style="display:none"></div>
+  <div class="sec-lbl" id="rec-period-lbl"></div>
   <div class="rec-list" id="rec-list"></div>
 </div>
 
@@ -1560,31 +1655,102 @@ function endSession(){
 
 // ═══════════════ RECORDS ════════════════
 function goRecords(){
-  const wb=document.getElementById('week-bar');wb.innerHTML='';
-  const days=['일','월','화','수','목','금','토'];
-  const todayStr=new Date().toISOString().slice(0,10);
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);
-    const rec=loadDay('wq_day_'+ds);
-    const col=document.createElement('div');col.className='day-col';
-    const has=rec&&rec.sessions&&rec.sessions.length>0;const isToday=ds===todayStr;
-    col.innerHTML=`<div class="day-label">${days[d.getDay()]}</div>
-      <div class="day-dot${has?' has':''}${isToday?' today':''}">${has?rec.sessions.length:'·'}</div>`;
-    wb.appendChild(col);
+  showScreen('sc-records');
+  const active=document.querySelector('.period-tab.active');
+  renderRecords(active?active.dataset.period:'week', active||document.querySelector('.period-tab'));
+}
+function renderRecords(period,btn){
+  document.querySelectorAll('.period-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const pref=namePrefix();
+  const today=new Date();
+  let days=[],chartGroups=[];
+  if(period==='week'){
+    for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);days.push(d.toISOString().slice(0,10));}
+    chartGroups=days.map(ds=>{const d=new Date(ds);return{label:['일','월','화','수','목','금','토'][d.getDay()],days:[ds]};});
+    document.getElementById('rec-chart-title').textContent='최근 7일 일별 학습';
+    document.getElementById('rec-period-lbl').textContent='최근 7일 세션 기록';
+  } else if(period==='month'){
+    for(let i=29;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);days.push(d.toISOString().slice(0,10));}
+    const wks=[[],[],[],[]];days.forEach((ds,i)=>wks[Math.floor(i/7)].push(ds));
+    chartGroups=wks.map((w,i)=>({label:`${i+1}주`,days:w}));
+    document.getElementById('rec-chart-title').textContent='최근 30일 주간 학습';
+    document.getElementById('rec-period-lbl').textContent='최근 30일 세션 기록';
+  } else {
+    for(let m=11;m>=0;m--){
+      const first=new Date(today.getFullYear(),today.getMonth()-m,1);
+      const last=new Date(today.getFullYear(),today.getMonth()-m+1,0);
+      const mdays=[];
+      for(let d=new Date(first);d<=last;d.setDate(d.getDate()+1))mdays.push(d.toISOString().slice(0,10));
+      chartGroups.push({label:`${first.getMonth()+1}월`,days:mdays});
+      days=[...days,...mdays];
+    }
+    document.getElementById('rec-chart-title').textContent='최근 12개월 월별 학습';
+    document.getElementById('rec-period-lbl').textContent='최근 12개월 세션 기록';
   }
-  const d=loadDay(todayKey());const list=document.getElementById('rec-list');list.innerHTML='';
-  if(!d||!d.sessions.length){list.innerHTML='<div style="color:var(--muted);font-size:.84rem;text-align:center;padding:12px">오늘 기록이 없어요</div>';}
-  else{[...d.sessions].reverse().forEach(s=>{
-    const total=s.correct+s.wrong;const acc=total?Math.round(s.correct/total*100):0;
-    const r=calcRank(s.correct,total);const gradeStr=s.grade?GRADE_INFO[s.grade].name:'종합';
+  // Aggregate data
+  let totSc=0,totC=0,totW=0,totSess=0,bestSt=0;const allSess=[];
+  days.forEach(ds=>{
+    const d=loadDay(pref+'day_'+ds);
+    if(d&&d.sessions){
+      totSc+=d.totalScore||0;totC+=d.totalCorrect||0;totW+=d.totalWrong||0;
+      totSess+=d.sessions.length;bestSt=Math.max(bestSt,d.bestStreak||0);
+      d.sessions.forEach(s=>allSess.push({...s,date:ds}));
+    }
+  });
+  const tot=totC+totW;const acc=tot?Math.round(totC/tot*100):0;
+  // Summary cards
+  document.getElementById('rec-summary').innerHTML=`
+    <div class="rec-sum-card glass"><div class="rec-sum-val" style="color:var(--primary)">${totSess}</div><div class="rec-sum-lbl">총 세션</div></div>
+    <div class="rec-sum-card glass"><div class="rec-sum-val" style="color:var(--green)">${totC}</div><div class="rec-sum-lbl">총 정답</div></div>
+    <div class="rec-sum-card glass"><div class="rec-sum-val" style="color:var(--gold)">${acc}%</div><div class="rec-sum-lbl">정확도</div></div>
+    <div class="rec-sum-card glass"><div class="rec-sum-val" style="color:var(--orange)">${(totSc/1000).toFixed(1)}K</div><div class="rec-sum-lbl">누적점수</div></div>`;
+  // Chart
+  const chartEl=document.getElementById('rec-chart');chartEl.innerHTML='';
+  const cv=chartGroups.map(g=>{
+    let sc=0,se=0;
+    g.days.forEach(ds=>{const d=loadDay(pref+'day_'+ds);if(d){sc+=d.totalScore||0;se+=d.sessions?d.sessions.length:0;}});
+    return{label:g.label,score:sc,sessions:se};
+  });
+  const mx=Math.max(...cv.map(v=>v.score),1);
+  cv.forEach(v=>{
+    const pct=Math.max(Math.round(v.score/mx*100),v.sessions>0?5:1);
+    const bw=document.createElement('div');bw.className='rc-bar-wrap';
+    const active=v.sessions>0;
+    bw.innerHTML=`<div class="rc-bar" style="height:${pct}%;background:${active?'linear-gradient(180deg,var(--primary),#1a7ac4)':'rgba(255,255,255,.1)'};${active?'box-shadow:0 0 6px rgba(110,231,255,.3)':''}"></div><div class="rc-label">${v.label}</div>`;
+    chartEl.appendChild(bw);
+  });
+  // Analysis
+  const anEl=document.getElementById('rec-analysis');
+  if(allSess.length){
+    const r=calcRank(totC,tot);
+    const best=allSess.reduce((a,b)=>b.score>a.score?b:a);
+    const mc={};allSess.forEach(s=>{mc[s.mode]=(mc[s.mode]||0)+1;});
+    const topMode=Object.entries(mc).sort((a,b)=>b[1]-a[1])[0];
+    const gc={};allSess.forEach(s=>{const g=s.grade||'종합';gc[g]=(gc[g]||0)+1;});
+    const topGrade=Object.entries(gc).sort((a,b)=>b[1]-a[1])[0];
+    anEl.style.display='';
+    anEl.innerHTML=`<h3>📊 기간 분석</h3>
+      <div class="rec-analysis-row"><span>종합 등급</span><span style="color:${r.color};font-weight:800">${r.rank} ${r.emoji} · ${r.msg}</span></div>
+      <div class="rec-analysis-row"><span>최고 세션</span><span style="color:var(--gold)">${best.score.toLocaleString()}pt</span></div>
+      <div class="rec-analysis-row"><span>최대 연속 정답</span><span style="color:var(--orange)">${bestSt}연속</span></div>
+      <div class="rec-analysis-row"><span>가장 많이 한 모드</span><span style="color:var(--primary)">${MODE_LABEL[topMode[0]]||topMode[0]} (${topMode[1]}회)</span></div>
+      <div class="rec-analysis-row"><span>가장 많이 한 학년</span><span style="color:var(--sec)">${topGrade[0]==='종합'?'종합':GRADE_INFO[topGrade[0]]?.name||topGrade[0]} (${topGrade[1]}회)</span></div>
+      <div class="rec-analysis-row"><span>오답률</span><span style="color:${tot&&(totW/tot)>0.3?'var(--red)':'var(--green)'}">${tot?Math.round(totW/tot*100):0}% ${tot&&(totW/tot)>0.3?'· 복습 필요':'· 양호'}</span></div>`;
+  } else {anEl.style.display='none';}
+  // Session list
+  const listEl=document.getElementById('rec-list');listEl.innerHTML='';
+  if(!allSess.length){listEl.innerHTML='<div style="color:var(--muted);font-size:.84rem;text-align:center;padding:20px">이 기간에 학습 기록이 없어요 🙂</div>';return;}
+  allSess.sort((a,b)=>(b.time||0)-(a.time||0)).slice(0,30).forEach(s=>{
+    const ttl=s.correct+s.wrong;const sa=ttl?Math.round(s.correct/ttl*100):0;
+    const r=calcRank(s.correct,ttl);const gs=s.grade?GRADE_INFO[s.grade].name:'종합';
     const li=document.createElement('div');li.className='rec-item glass';
     li.innerHTML=`<div class="ri-grade">${r.emoji}</div>
-      <div class="ri-info"><h4>${gradeStr} · ${MODE_LABEL[s.mode]||s.mode}</h4>
-      <p>정답 ${s.correct} / 오답 ${s.wrong} · 정확도 ${acc}% · STAGE ${s.stageAt}</p></div>
+      <div class="ri-info"><h4>${gs} · ${MODE_LABEL[s.mode]||s.mode} <span style="font-size:.62rem;color:var(--muted);margin-left:4px">${s.date?s.date.slice(5):''}</span></h4>
+      <p>정답 ${s.correct} / 오답 ${s.wrong} · 정확도 ${sa}% · 연속 ${s.maxStreak}</p></div>
       <div class="ri-score">${s.score.toLocaleString()}</div>`;
-    list.appendChild(li);
-  });}
-  showScreen('sc-records');
+    listEl.appendChild(li);
+  });
 }
 
 // ═══════════════ NAV ════════════════
