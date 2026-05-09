@@ -84,8 +84,12 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .cheer-banner .cheer-sub{font-size:.8rem;margin-top:4px;color:var(--primary);font-weight:600;}
 .logo p{color:var(--muted);margin-top:4px;font-size:.82rem;}
 
-.sec-lbl{width:100%;font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;
-  letter-spacing:2px;padding-left:2px;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+.sec-lbl{width:100%;font-size:.78rem;font-weight:800;letter-spacing:1.5px;padding:2px 4px 2px 8px;
+  color:#e0f4ff;text-transform:uppercase;
+  text-shadow:0 1px 0 rgba(255,255,255,.35),0 2px 8px rgba(0,150,255,.5),0 0 18px rgba(100,220,255,.25);
+  border-left:3px solid rgba(110,231,255,.7);
+  background:linear-gradient(90deg,rgba(110,231,255,.1),transparent);
+  border-radius:0 4px 4px 0;}
 
 /* GRADE GRID */
 .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;}
@@ -93,8 +97,10 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   border-radius:var(--r);padding:18px 8px;text-align:center;cursor:pointer;transition:all .18s;}
 .grade-card:hover{transform:translateY(-3px);background:var(--card2);}
 .grade-card .g-icon{margin-bottom:7px;display:flex;justify-content:center;line-height:0;}
-.grade-card h3{font-size:.95rem;font-weight:800;}
-.grade-card p{font-size:.68rem;color:var(--muted);margin-top:2px;}
+.grade-card h3{font-size:.95rem;font-weight:900;color:#e8f6ff;
+  text-shadow:0 1px 0 rgba(255,255,255,.4),0 2px 6px rgba(0,80,200,.7),0 -1px 0 rgba(0,0,0,.3);}
+.grade-card p{font-size:.68rem;color:rgba(200,235,255,.75);margin-top:2px;font-weight:600;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);}
 .grade-card .g-stage{font-size:.65rem;margin-top:5px;padding:2px 8px;border-radius:10px;
   display:inline-block;font-weight:700;background:rgba(110,231,255,.2);color:var(--primary);}
 
@@ -105,13 +111,20 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   display:flex;align-items:center;gap:12px;}
 .mix-card:hover{background:var(--card2);transform:translateY(-1px);}
 .mix-card .icon{flex-shrink:0;display:flex;align-items:center;line-height:0;}
-.mix-card h3{font-size:.88rem;font-weight:700;}
-.mix-card p{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.mix-card h3{font-size:.88rem;font-weight:900;color:#e8f6ff;
+  text-shadow:0 1px 0 rgba(255,255,255,.35),0 2px 5px rgba(0,80,200,.6),0 -1px 0 rgba(0,0,0,.3);}
+.mix-card p{font-size:.7rem;color:rgba(200,235,255,.72);margin-top:2px;font-weight:600;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);}
 .mix-card.all{grid-column:1/-1;background:rgba(110,100,255,.25);border-color:rgba(110,231,255,.5);}
 
 /* TODAY CARD */
 .today-card{width:100%;padding:18px 20px;}
-.today-card h3{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;}
+.today-card-hdr{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.today-card-hdr .tc-title{font-size:.9rem;font-weight:900;color:#e8f6ff;
+  text-shadow:0 1px 0 rgba(255,255,255,.4),0 2px 8px rgba(0,150,255,.55),0 -1px 0 rgba(0,0,0,.3);
+  letter-spacing:.3px;}
+.today-card-hdr .tc-date{font-size:.78rem;font-weight:700;color:var(--primary);
+  text-shadow:0 1px 4px rgba(0,180,255,.5);margin-left:2px;}
 .today-empty{color:var(--muted);font-size:.84rem;text-align:center;padding:6px 0;}
 .today-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .today-stat{background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
@@ -489,7 +502,36 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     </div>
   </div>
   <div class="today-card glass" id="today-card">
-    <h3>📅 오늘의 학습 기록 <span id="today-date-lbl" style="color:var(--primary)"></span></h3>
+    <div class="today-card-hdr">
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <defs>
+          <radialGradient id="calBg" cx="38%" cy="28%" r="72%">
+            <stop offset="0%" stop-color="#7dd3fc"/>
+            <stop offset="55%" stop-color="#1d6db5"/>
+            <stop offset="100%" stop-color="#0a3d6e"/>
+          </radialGradient>
+          <linearGradient id="calTop" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="100%" stop-color="#1e4e8c"/>
+          </linearGradient>
+        </defs>
+        <!-- drop shadow --><rect x="2" y="4" width="28" height="26" rx="5" fill="rgba(0,0,0,.3)" transform="translate(0,2)"/>
+        <!-- body --><rect x="2" y="4" width="28" height="26" rx="5" fill="url(#calBg)"/>
+        <!-- header bar --><rect x="2" y="4" width="28" height="9" rx="5" fill="url(#calTop)"/>
+        <rect x="2" y="9" width="28" height="4" fill="url(#calTop)"/>
+        <!-- ring pins --><rect x="9" y="2" width="3" height="7" rx="1.5" fill="#93c5fd"/>
+        <rect x="20" y="2" width="3" height="7" rx="1.5" fill="#93c5fd"/>
+        <!-- grid dots --><rect x="7" y="17" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.9)"/>
+        <rect x="14" y="17" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.75)"/>
+        <rect x="21" y="17" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.75)"/>
+        <rect x="7" y="23" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.75)"/>
+        <rect x="14" y="23" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.9)"/>
+        <rect x="21" y="23" width="4" height="3.5" rx="1" fill="rgba(255,255,255,.6)"/>
+        <!-- specular --><ellipse cx="10" cy="8" rx="7" ry="3" fill="rgba(255,255,255,.25)" transform="rotate(-15 10 8)"/>
+      </svg>
+      <div class="tc-title">오늘의 학습 기록</div>
+      <div class="tc-date" id="today-date-lbl"></div>
+    </div>
     <div id="today-body"></div>
   </div>
   <div style="width:100%;display:flex;align-items:center;padding:2px 0 4px;">
