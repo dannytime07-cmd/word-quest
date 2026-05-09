@@ -63,6 +63,23 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   0%{filter:drop-shadow(0 0 8px rgba(168,232,255,.7)) drop-shadow(0 2px 6px rgba(0,50,120,.5));}
   100%{filter:drop-shadow(0 0 22px rgba(200,244,255,1)) drop-shadow(0 2px 8px rgba(0,50,120,.5));}
 }
+@keyframes balloonRise{
+  0%{transform:translateY(0) scale(.4) rotate(0deg);opacity:0;}
+  15%{opacity:1;transform:translateY(-15vh) scale(1) rotate(-8deg);}
+  50%{transform:translateY(-55vh) scale(1.05) rotate(10deg);}
+  100%{transform:translateY(-115vh) scale(.9) rotate(-5deg);opacity:0;}
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-10vh) rotate(0deg);opacity:1;}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:0;}
+}
+.cheer-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  z-index:9998;background:rgba(0,0,0,.7);border:2px solid var(--gold);border-radius:20px;
+  padding:18px 32px;text-align:center;font-size:1.3rem;font-weight:900;color:#fff;
+  text-shadow:0 0 12px var(--gold);backdrop-filter:blur(10px);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+.cheer-banner.pop{transform:translate(-50%,-50%) scale(1);}
+.cheer-banner .cheer-sub{font-size:.8rem;margin-top:4px;color:var(--primary);font-weight:600;}
 .logo p{color:var(--muted);margin-top:4px;font-size:.82rem;}
 
 .sec-lbl{width:100%;font-size:.7rem;color:rgba(255,255,255,.7);text-transform:uppercase;
@@ -536,6 +553,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 </div>
 
 <div class="milestone-toast" id="milestone-toast"></div>
+<div class="cheer-banner" id="cheer-banner"><div id="cheer-main"></div><div class="cheer-sub" id="cheer-sub"></div></div>
 </div>
 
 <script>
@@ -714,15 +732,15 @@ const IDIOMS=[
 ];
 
 const MILESTONES={
-  10:["🎉 10개 달성! 훌륭한 시작이에요!","💪 10개 클리어! 이 기세로!","⭐ 10개 완료! 순조롭게 출발!"],
-  20:["🔥 20개 돌파! 점점 빨라지고 있어요!","🌟 20개 완료! 대단해요!","✨ 벌써 20개! 계속!"],
-  30:["🏃 30개! 반의반이 왔어요!","💨 30개! 이 페이스면 금방!","🎯 30개 클리어! 좋은 리듬!"],
-  40:["⚡ 40개! 절반이 코앞!","🌈 40개 돌파! 대단한 집중력!","🎪 40개! 조금만 더!"],
-  50:["🏅 절반 달성! 50개 완주!","🎊 50개! 내리막길이에요!","🥳 중간 지점! 50개 완료!"],
-  60:["🚀 60개! 40개만 남았어요!","💫 60개! 종착지가 보여요!","🔮 60개! 거의 다 왔어요!"],
-  70:["🌠 70개! 30개만 남았어요!","⭐ 70개! 얼마 안 남았어요!","🏆 70개! 진짜 실력자예요!"],
-  80:["🎯 80개! 20개만 남았어요!","🔥 80개! 마지막 스퍼트!","💥 80개! 거의 다 왔어요!"],
-  90:["🚀 90개! 10개만! 할 수 있어요!","⚡ 90개! 마지막!","🏁 결승선이 바로 눈앞!"],
+  10:{main:["앗싸! 10개 맞혔어!","와, 제법인데?","오, 시작이 좋은데!"],sub:["이 페이스면 금방이야 💪","고지가 저 멀리 보이기 시작했어","슬슬 탄력 받는 느낌!"],fx:'confetti'},
+  20:{main:["20개 클리어! 잘하네!","오 진짜? 벌써 20개?","20개! 머리가 좋은 거야~"],sub:["아직 80개 남았지만... 할 수 있어!","계속 이 기세로 달려봐","뇌가 뜨거워지는 소리 들려?"],fx:'balloon'},
+  30:{main:["30개 돌파! 쉬지 않네?","와 30개! 집중력 미쳤다","30개! 솔직히 좀 놀랐어"],sub:["3분의 1 완주! 고지가 점점 가까워","이쯤 되면 포기가 더 어렵지 않나?","딱 중간 지점까지만 더!"],fx:'confetti'},
+  40:{main:["40개! 절반이 코앞이야","40개 클리어, 대박이다","어? 벌써 40개?!"],sub:["고지가 얼마 안 남았어!","10개만 더 하면 절반이야, 해봐!","집중력 레벨 MAX 구간 진입"],fx:'balloon'},
+  50:{main:["🎊 절반 달성!! 50개!!","반환점 도달! 이제 내리막이야","50개!! 이거 진짜 대단한 거야"],sub:["여기서 포기하면 너무 아깝잖아","나머지 절반은 더 쉬울 거야 (아마도)","이미 반 왔어, 멈추지 마!"],fx:'fanfare'},
+  60:{main:["60개! 이제 40개만!","60개 클리어! 눈빛이 달라졌어","오, 60개! 진짜 하는구나?"],sub:["고지가 저기 보여! 조금만 더!","40개? 별거 아니잖아, 우리","결승선 냄새가 솔솔 풍겨"],fx:'balloon'},
+  70:{main:["70개!! 30개 남았어!","70개! 실력자 맞네","어... 70개? 대단한데?"],sub:["30개는 껌이지! 이미 증명했잖아","여기까지 온 사람이 포기할 리 없어","마지막 스퍼트 준비 됐어?"],fx:'confetti'},
+  80:{main:["80개! 20개만 남았어!","80개 클리어!! 거의 다 왔어!","80개... 진짜 끝을 보는구나"],sub:["20개!! 손가락으로 셀 수 있어!","고지가 바로 저기야! 달려!","이쯤이면 전설 소리 들어도 됨"],fx:'balloon'},
+  90:{main:["90개!! 이제 10개!!","90개 클리어!!! 마지막이야!!!","90개... 결승선이 보인다!!!"],sub:["10개!! 열 손가락으로 세봐!","포기? 그게 뭐야, 먹는 거야?","여기까지 온 게 대단해, 끝내버려!"],fx:'fanfare'},
 };
 
 const MAX_STAGE=10;
@@ -814,9 +832,18 @@ function checkNameAndStart(cb){
   document.getElementById('name-input').focus();
   window._nameCallback=cb;
 }
-function saveName(){
+async function saveName(){
   const n=document.getElementById('name-input').value.trim();
   if(!n){alert('이름을 입력해주세요!');return;}
+  // Check duplicate: if Firebase has this name AND it's not the current player's name
+  const current=getPlayerName();
+  if(n!==current){
+    const existing=await fbGet(`ranking/${fbKey(n)}`);
+    if(existing&&existing.name){
+      alert(`"${n}" 이름은 이미 다른 사람이 사용 중이에요.\n다른 이름을 골라주세요!`);
+      return;
+    }
+  }
   setPlayerName(n);
   document.getElementById('name-modal').classList.remove('show');
   syncPlayerFromFirebase(n).then(()=>{
@@ -826,21 +853,19 @@ function saveName(){
 document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
 async function deleteAccount(){
   const n=getPlayerName();
-  if(!n){alert('로그인된 계정이 없습니다.');return;}
-  if(!confirm(`"${n}" 계정의 모든 데이터를 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`))return;
-  // Remove all localStorage keys for this player
+  if(!n){alert('등록된 이름이 없습니다.\n게임을 시작하면 이름을 등록할 수 있어요.');return;}
+  if(!confirm(`"${n}" 이름과 모든 기록을 삭제할까요?\n이 작업은 되돌릴 수 없습니다.`))return;
   Object.keys(localStorage).filter(k=>k.startsWith('wq_'+n+'_')).forEach(k=>localStorage.removeItem(k));
   localStorage.removeItem('wq_player_name');
-  // Remove from Firebase
   const k=fbKey(n);
   await Promise.all([
     fetch(`${FB}/players/${k}.json`,{method:'DELETE'}),
     fetch(`${FB}/ranking/${k}.json`,{method:'DELETE'})
   ]).catch(()=>{});
   G={};
-  alert(`"${n}" 계정이 삭제되었습니다.`);
-  buildGradeGrid();renderTodayCard();showScreen('sc-home');
   document.getElementById('home-name-lbl').textContent='';
+  alert(`"${n}" 이름이 삭제되었습니다.`);
+  buildGradeGrid();renderTodayCard();showScreen('sc-home');
 }
 function changeName(){
   localStorage.removeItem('wq_player_name');
@@ -1181,15 +1206,82 @@ function checkMilestone(){
   for(const m of ms){
     if(cleared>=m&&G.lastMilestone<m){
       G.lastMilestone=m;
-      const msgs=MILESTONES[m];
-      showToast(msgs[Math.floor(Math.random()*msgs.length)]);break;
+      const d=MILESTONES[m];
+      const main=d.main[Math.floor(Math.random()*d.main.length)];
+      const sub=d.sub[Math.floor(Math.random()*d.sub.length)];
+      showCheer(main,sub,d.fx);break;
     }
   }
+}
+function showCheer(main,sub,fx){
+  const b=document.getElementById('cheer-banner');
+  document.getElementById('cheer-main').textContent=main;
+  document.getElementById('cheer-sub').textContent=sub;
+  b.classList.add('pop');
+  if(fx==='fanfare')playFanfare();
+  else if(fx==='balloon')showBalloons(false);
+  else showConfetti();
+  setTimeout(()=>{b.classList.remove('pop');},2800);
 }
 function showToast(msg){
   const t=document.getElementById('milestone-toast');
   t.textContent=msg;t.classList.remove('hide');t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');t.classList.add('hide');},2800);
+}
+function showBalloons(withSound){
+  const emojis=['🎈','🎊','🎉','⭐','✨','🎀','🌟'];
+  for(let i=0;i<14;i++){
+    const el=document.createElement('div');
+    const delay=Math.random()*0.8;
+    const dur=1.8+Math.random()*1.5;
+    el.style.cssText=`position:fixed;font-size:${1.4+Math.random()*1.2}rem;
+      left:${Math.random()*92}%;bottom:-40px;z-index:9997;pointer-events:none;
+      animation:balloonRise ${dur}s ease-out ${delay}s forwards;`;
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay+0.5)*1000);
+  }
+  if(withSound)playFanfare();
+}
+function showConfetti(){
+  const colors=['#ffd700','#ff6b9d','#6ee7ff','#2de0a5','#ff8c42','#a29bfe'];
+  for(let i=0;i<22;i++){
+    const el=document.createElement('div');
+    const size=6+Math.random()*8;
+    const delay=Math.random()*0.6;
+    const dur=1.5+Math.random()*1.5;
+    el.style.cssText=`position:fixed;width:${size}px;height:${size}px;border-radius:${Math.random()>.5?'50%':'2px'};
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;top:-10px;z-index:9997;pointer-events:none;
+      animation:confettiFall ${dur}s linear ${delay}s forwards;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay+0.3)*1000);
+  }
+}
+function playFanfare(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const seq=[[523,.0],[659,.13],[784,.26],[1047,.38],[784,.52],[1047,.62]];
+    seq.forEach(([freq,when])=>{
+      const o=ctx.createOscillator();const g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='triangle';o.frequency.value=freq;
+      const t=ctx.currentTime+when;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.25,t+.04);
+      g.gain.linearRampToValueAtTime(0,t+.22);
+      o.start(t);o.stop(t+.25);
+    });
+    // Balloon pop sounds for balloon mode
+    for(let i=0;i<3;i++){
+      const o=ctx.createOscillator();const g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.setValueAtTime(800,ctx.currentTime+.9+i*.15);
+      o.frequency.linearRampToValueAtTime(200,ctx.currentTime+1.05+i*.15);
+      g.gain.setValueAtTime(.15,ctx.currentTime+.9+i*.15);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+1.1+i*.15);
+      o.start(ctx.currentTime+.9+i*.15);o.stop(ctx.currentTime+1.15+i*.15);
+    }
+  }catch(e){}
 }
 
 // ═══════════════ FLOAT POINTS ════════════════
