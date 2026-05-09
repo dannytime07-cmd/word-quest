@@ -42,9 +42,11 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 
 /* NAV */
 .nav-bar{width:100%;display:flex;align-items:center;gap:10px;padding:4px 0 2px;}
-.nav-back{background:rgba(255,255,255,.15);border:1px solid var(--border);border-radius:20px;
-  padding:7px 14px;font-size:.8rem;color:var(--text);cursor:pointer;transition:all .15s;backdrop-filter:blur(8px);}
-.nav-back:hover{background:rgba(255,255,255,.28);}
+.nav-back{background:rgba(0,25,70,.55);border:1.5px solid rgba(110,231,255,.45);border-radius:22px;
+  padding:7px 16px;font-size:.8rem;color:#fff;cursor:pointer;transition:all .15s;
+  backdrop-filter:blur(10px);text-shadow:0 1px 4px rgba(0,0,0,.6);
+  box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12);}
+.nav-back:hover{background:rgba(0,50,120,.65);border-color:rgba(110,231,255,.75);}
 .nav-t{font-size:.9rem;font-weight:700;color:var(--text);flex:1;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.3);}
 .nav-sp{width:72px;}
 
@@ -252,10 +254,8 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .rank-row{padding:16px 18px;display:flex;flex-direction:column;gap:8px;transition:all .15s;}
 .rank-row.me{border-color:var(--gold)!important;background:rgba(255,209,102,.12);}
 .rank-top{display:flex;align-items:center;gap:12px;}
-.rank-num{font-size:1.2rem;font-weight:900;width:30px;text-align:center;flex-shrink:0;}
-.rank-num.top1{color:var(--gold);}
-.rank-num.top2{color:#c8e8ff;}
-.rank-num.top3{color:#ffb347;}
+.rank-num{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.rank-num-plain{font-size:1rem;font-weight:900;color:rgba(255,255,255,.55);width:40px;text-align:center;}
 .rank-name{flex:1;font-weight:800;font-size:.95rem;}
 .rank-score{font-size:1rem;font-weight:900;color:var(--gold);flex-shrink:0;}
 .rank-bar-wrap{width:100%;height:8px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden;}
@@ -652,11 +652,20 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <div class="nav-t">🏆 랭킹</div>
     <div class="nav-sp"></div>
   </div>
-  <div class="glass" style="width:100%;padding:16px 20px;text-align:center;">
-    <div style="font-size:.8rem;color:var(--muted);margin-bottom:4px;">내 이름</div>
-    <div style="font-size:1.1rem;font-weight:800;" id="my-name-lbl"></div>
-    <button class="sm-btn" style="margin-top:8px;" onclick="changeName()">이름 변경</button>
+  <div class="glass" style="width:100%;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:2px;">내 이름</div>
+      <div style="font-size:1.05rem;font-weight:800;" id="my-name-lbl"></div>
+    </div>
+    <button class="sm-btn" onclick="changeName()">이름 변경</button>
   </div>
+  <div class="period-tabs" id="rank-period-tabs">
+    <button class="period-tab active" data-period="all" onclick="renderRankingForPeriod('all',this)">전체</button>
+    <button class="period-tab" data-period="month" onclick="renderRankingForPeriod('month',this)">1달</button>
+    <button class="period-tab" data-period="week" onclick="renderRankingForPeriod('week',this)">1주일</button>
+    <button class="period-tab" data-period="today" onclick="renderRankingForPeriod('today',this)">오늘</button>
+  </div>
+  <div id="rank-loading" style="display:none;text-align:center;color:var(--muted);padding:20px;font-size:.85rem;">불러오는 중...</div>
   <div class="rank-table" id="rank-table"></div>
 </div>
 
@@ -753,6 +762,9 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 <linearGradient id="gic3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#be185d"/></linearGradient>
 <linearGradient id="gic4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
 <filter id="gstar" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<radialGradient id="mg1" cx="38%" cy="28%" r="68%"><stop offset="0%" stop-color="#fef08a"/><stop offset="50%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#b45309"/></radialGradient>
+<radialGradient id="mg2" cx="38%" cy="28%" r="68%"><stop offset="0%" stop-color="#f1f5f9"/><stop offset="50%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#334155"/></radialGradient>
+<radialGradient id="mg3" cx="38%" cy="28%" r="68%"><stop offset="0%" stop-color="#fed7aa"/><stop offset="50%" stop-color="#fb923c"/><stop offset="100%" stop-color="#7c2d12"/></radialGradient>
 </defs>
 </svg>
 <div class="milestone-toast" id="milestone-toast"></div>
@@ -1085,6 +1097,21 @@ function changeName(){
     syncPlayerFromFirebase(newName).then(()=>{buildGradeGrid();renderTodayCard();showScreen('sc-home');});
   };
 }
+function medalSVG(rank){
+  const gid=['mg1','mg2','mg3'][rank-1];
+  const rc=[['#fef08a','#fbbf24'],['#f1f5f9','#94a3b8'],['#fed7aa','#fb923c']][rank-1];
+  const rib=[['#f59e0b','#d97706'],['#64748b','#475569'],['#ea580c','#c2410c']][rank-1];
+  return `<svg width="40" height="48" viewBox="0 0 40 48" xmlns="http://www.w3.org/2000/svg">
+    <!-- ribbon left --><polygon points="13,22 7,44 13,40 16,44" fill="${rib[0]}"/>
+    <!-- ribbon right --><polygon points="27,22 33,44 27,40 24,44" fill="${rib[1]}"/>
+    <!-- disc shadow --><ellipse cx="20" cy="24" rx="17" ry="17" fill="rgba(0,0,0,.25)" transform="translate(1,2)"/>
+    <!-- disc --><circle cx="20" cy="22" r="17" fill="url(#${gid})"/>
+    <!-- inner ring --><circle cx="20" cy="22" r="14" fill="none" stroke="${rc[0]}" stroke-width="1.2" stroke-opacity=".5"/>
+    <!-- specular --><ellipse cx="14" cy="14" rx="6" ry="4" fill="rgba(255,255,255,.45)" transform="rotate(-30 14 14)"/>
+    <!-- rank number --><text x="20" y="27" text-anchor="middle" font-size="13" font-weight="900" fill="rgba(0,0,0,.45)" font-family="sans-serif">${rank}</text>
+    <text x="20" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="${rc[0]}" font-family="sans-serif">${rank}</text>
+  </svg>`;
+}
 function renderRankTable(r){
   const me=getPlayerName();
   const tbl=document.getElementById('rank-table');tbl.innerHTML='';
@@ -1098,14 +1125,14 @@ function renderRankTable(r){
   r.forEach((p,i)=>{
     const total=p.correct+p.wrong;
     const pct=Math.round(p.score/topScore*100);
-    const numClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
-    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}위`;
+    const rankMark=i<3?`<div class="rank-num">${medalSVG(i+1)}</div>`
+      :`<div class="rank-num-plain">${i+1}위</div>`;
     const barColor=barColors[i]||'linear-gradient(90deg,var(--primary),#3a8fd4)';
     const row=document.createElement('div');
     row.className='rank-row glass'+(p.name===me?' me':'');
     row.innerHTML=`
       <div class="rank-top">
-        <div class="rank-num ${numClass}">${medal}</div>
+        ${rankMark}
         <div class="rank-name">${p.name}${p.name===me?' <span style="font-size:.7rem;color:var(--gold)">◀ 나</span>':''}</div>
         <div class="rank-score">${p.score.toLocaleString()}pt</div>
       </div>
@@ -1119,26 +1146,60 @@ function renderRankTable(r){
     tbl.appendChild(row);
   });
 }
+function dateRange(period){
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=period==='today'?0:period==='week'?6:29;
+  const from=new Date(today);from.setDate(from.getDate()-days);
+  const keys=[];for(let d=new Date(from);d<=today;d.setDate(d.getDate()+1))
+    keys.push('day_'+d.toISOString().slice(0,10));
+  return keys;
+}
+async function renderRankingForPeriod(period, btn){
+  document.querySelectorAll('#rank-period-tabs .period-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const loading=document.getElementById('rank-loading');
+  loading.style.display='block';
+  document.getElementById('rank-table').innerHTML='';
+  if(period==='all'){
+    const local=loadRanking();
+    const data=await fbGet('ranking');
+    if(data){
+      const merged={};
+      local.forEach(p=>{merged[p.name]=p;});
+      Object.values(data).forEach(p=>{if(!merged[p.name]||p.score>merged[p.name].score)merged[p.name]=p;});
+      const final=Object.values(merged).sort((a,b)=>b.score-a.score);
+      saveRanking(final);loading.style.display='none';renderRankTable(final);
+    } else {loading.style.display='none';renderRankTable(local);}
+    return;
+  }
+  // Period-based: get all known player names, fetch day data per player
+  const keys=dateRange(period);
+  const allData=await fbGet('ranking');
+  const names=allData?Object.values(allData).map(p=>p.name):loadRanking().map(p=>p.name);
+  if(!names.length){loading.style.display='none';renderRankTable([]);return;}
+  const rows=await Promise.all(names.map(async n=>{
+    const days=await fbGet(`players/${fbKey(n)}/days`);
+    let score=0,correct=0,wrong=0;
+    if(days){
+      keys.forEach(k=>{
+        const dd=days[k];
+        if(dd){score+=dd.totalScore||0;correct+=dd.totalCorrect||0;wrong+=dd.totalWrong||0;}
+      });
+    }
+    if(score===0&&correct===0&&wrong===0)return null;
+    const total=correct+wrong;
+    const acc=total?Math.round(correct/total*100):0;
+    return {name:n,score,correct,wrong,acc};
+  }));
+  const valid=rows.filter(Boolean).sort((a,b)=>b.score-a.score);
+  loading.style.display='none';renderRankTable(valid);
+}
 function goRanking(){
   const me=getPlayerName();
   document.getElementById('my-name-lbl').textContent=me||'(이름 없음)';
-  // Show local ranking immediately, then refresh from Firebase
-  const local=loadRanking();
-  renderRankTable(local);
   showScreen('sc-ranking');
-  fbGet('ranking').then(data=>{
-    if(!data)return;
-    const fbRanking=Object.values(data).sort((a,b)=>b.score-a.score);
-    // Merge: update local ranking with Firebase data
-    const merged={};
-    local.forEach(p=>{merged[p.name]=p;});
-    fbRanking.forEach(p=>{
-      if(!merged[p.name]||p.score>merged[p.name].score)merged[p.name]=p;
-    });
-    const final=Object.values(merged).sort((a,b)=>b.score-a.score);
-    saveRanking(final);
-    renderRankTable(final);
-  });
+  const activeTab=document.querySelector('#rank-period-tabs .period-tab.active')||document.querySelector('#rank-period-tabs .period-tab');
+  renderRankingForPeriod(activeTab?activeTab.dataset.period:'all', activeTab);
 }
 
 // ═══════════════ BUBBLES ════════════════
