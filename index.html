@@ -549,6 +549,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
     <p>랭킹 등록에 사용됩니다</p>
     <input class="name-input" id="name-input" type="text" maxlength="10" placeholder="닉네임 (최대 10자)">
     <button class="ov-btn pri" onclick="saveName()">시작하기</button>
+    <button class="ov-btn" style="background:rgba(255,255,255,.1);margin-top:4px;" onclick="closeNameModal()">취소</button>
   </div>
 </div>
 
@@ -850,7 +851,11 @@ async function saveName(){
     if(window._nameCallback){window._nameCallback();window._nameCallback=null;}
   });
 }
-document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();});
+document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveName();if(e.key==='Escape')closeNameModal();});
+function closeNameModal(){
+  document.getElementById('name-modal').classList.remove('show');
+  window._nameCallback=null;
+}
 async function deleteAccount(){
   const n=getPlayerName();
   if(!n){alert('등록된 이름이 없습니다.\n게임을 시작하면 이름을 등록할 수 있어요.');return;}
