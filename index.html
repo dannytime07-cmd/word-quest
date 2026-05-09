@@ -90,7 +90,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .grade-card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);
   border-radius:var(--r);padding:18px 8px;text-align:center;cursor:pointer;transition:all .18s;}
 .grade-card:hover{transform:translateY(-3px);background:var(--card2);}
-.grade-card .g-icon{font-size:1.6rem;margin-bottom:7px;}
+.grade-card .g-icon{margin-bottom:7px;display:flex;justify-content:center;line-height:0;}
 .grade-card h3{font-size:.95rem;font-weight:800;}
 .grade-card p{font-size:.68rem;color:var(--muted);margin-top:2px;}
 .grade-card .g-stage{font-size:.65rem;margin-top:5px;padding:2px 8px;border-radius:10px;
@@ -102,7 +102,7 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .18s;
   display:flex;align-items:center;gap:12px;}
 .mix-card:hover{background:var(--card2);transform:translateY(-1px);}
-.mix-card .icon{font-size:1.4rem;flex-shrink:0;}
+.mix-card .icon{flex-shrink:0;display:flex;align-items:center;line-height:0;}
 .mix-card h3{font-size:.88rem;font-weight:700;}
 .mix-card p{font-size:.7rem;color:var(--muted);margin-top:2px;}
 .mix-card.all{grid-column:1/-1;background:rgba(110,100,255,.25);border-color:rgba(110,231,255,.5);}
@@ -360,19 +360,24 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   <div class="sec-lbl">종합 모드</div>
   <div class="mix-strip">
     <div class="mix-card glass" onclick="startGame('en-ko',null)">
-      <div class="icon">🔤</div><div><h3>전체 영어→한글</h3><p>전체 단어 중 100개 랜덤</p></div>
+      <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="url(#gic0)"/><rect x="3" y="10" width="13" height="18" rx="3" fill="rgba(255,255,255,.22)"/><text x="9.5" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="900" font-family="Georgia,serif">A</text><path d="M18 19h6M22 16.5l3.5 2.5-3.5 2.5" stroke="rgba(255,255,255,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="26" y="10" width="11" height="18" rx="3" fill="rgba(255,255,255,.22)"/><text x="31.5" y="24.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">가</text></svg></div>
+      <div><h3>전체 영어→한글</h3><p>전체 단어 중 100개 랜덤</p></div>
     </div>
     <div class="mix-card glass" onclick="startGame('ko-en',null)">
-      <div class="icon">🇰🇷</div><div><h3>전체 한글→영어</h3><p>전체 단어 중 100개 랜덤</p></div>
+      <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="url(#gic1)"/><rect x="3" y="10" width="13" height="18" rx="3" fill="rgba(255,255,255,.22)"/><text x="9.5" y="24.5" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">가</text><path d="M18 19h6M22 16.5l3.5 2.5-3.5 2.5" stroke="rgba(255,255,255,.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="26" y="10" width="11" height="18" rx="3" fill="rgba(255,255,255,.22)"/><text x="31.5" y="24" text-anchor="middle" fill="#fff" font-size="14" font-weight="900" font-family="Georgia,serif">A</text></svg></div>
+      <div><h3>전체 한글→영어</h3><p>전체 단어 중 100개 랜덤</p></div>
     </div>
     <div class="mix-card glass" onclick="startGame('idiom-en-ko',null)">
-      <div class="icon">💬</div><div><h3>숙어 영어→한글</h3><p>필수 숙어 50개 전체</p></div>
+      <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="url(#gic2)"/><rect x="4" y="6" width="26" height="18" rx="5" fill="rgba(255,255,255,.9)"/><polygon points="9,24 7,32 18,24" fill="rgba(255,255,255,.9)"/><circle cx="11" cy="15" r="2.4" fill="#7c3aed"/><circle cx="18" cy="15" r="2.4" fill="#7c3aed"/><circle cx="25" cy="15" r="2.4" fill="#7c3aed"/><rect x="29" y="28" width="9" height="8" rx="2" fill="rgba(255,255,255,.28)"/><text x="33.5" y="35.5" text-anchor="middle" fill="#fff" font-size="6" font-weight="800">EN</text></svg></div>
+      <div><h3>숙어 영어→한글</h3><p>필수 숙어 50개 전체</p></div>
     </div>
     <div class="mix-card glass" onclick="startGame('idiom-ko-en',null)">
-      <div class="icon">🗣️</div><div><h3>숙어 한글→영어</h3><p>필수 숙어 50개 전체</p></div>
+      <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="url(#gic3)"/><rect x="10" y="6" width="26" height="18" rx="5" fill="rgba(255,255,255,.9)"/><polygon points="31,24 33,32 22,24" fill="rgba(255,255,255,.9)"/><circle cx="17" cy="15" r="2.4" fill="#be185d"/><circle cx="24" cy="15" r="2.4" fill="#be185d"/><circle cx="31" cy="15" r="2.4" fill="#be185d"/><rect x="2" y="28" width="9" height="8" rx="2" fill="rgba(255,255,255,.28)"/><text x="6.5" y="35.5" text-anchor="middle" fill="#fff" font-size="6" font-weight="800">KR</text></svg></div>
+      <div><h3>숙어 한글→영어</h3><p>필수 숙어 50개 전체</p></div>
     </div>
     <div class="mix-card all glass" onclick="startGame('all',null)">
-      <div class="icon">⚡</div><div><h3>전체 종합 모드</h3><p>단어+숙어 · 영한+한영 · 학년별 25개씩 100개</p></div>
+      <div class="icon"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="url(#gic4)"/><path d="M21 2L12 21h8L17 38l15-20h-9Z" fill="rgba(255,255,255,.93)"/><circle cx="6" cy="8" r="2" fill="rgba(255,255,255,.55)"/><circle cx="35" cy="9" r="1.5" fill="rgba(255,255,255,.5)"/><circle cx="5" cy="31" r="1.3" fill="rgba(255,255,255,.4)"/><circle cx="35" cy="30" r="1.8" fill="rgba(255,255,255,.5)"/></svg></div>
+      <div><h3>전체 종합 모드</h3><p>단어+숙어 · 영한+한영 · 학년별 25개씩 100개</p></div>
     </div>
   </div>
   <div class="today-card glass" id="today-card">
@@ -553,6 +558,24 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
   </div>
 </div>
 
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+<defs>
+<linearGradient id="gbk0" x1="0" y1="0" x2=".6" y2="1"><stop offset="0%" stop-color="#4ade80"/><stop offset="100%" stop-color="#15803d"/></linearGradient>
+<linearGradient id="gsp0" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#14532d"/><stop offset="100%" stop-color="#166534"/></linearGradient>
+<linearGradient id="gbk1" x1="0" y1="0" x2=".6" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient>
+<linearGradient id="gsp1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#1e40af"/></linearGradient>
+<linearGradient id="gbk2" x1="0" y1="0" x2=".6" y2="1"><stop offset="0%" stop-color="#fcd34d"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
+<linearGradient id="gsp2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#78350f"/><stop offset="100%" stop-color="#92400e"/></linearGradient>
+<linearGradient id="gbk3" x1="0" y1="0" x2=".6" y2="1"><stop offset="0%" stop-color="#f87171"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+<linearGradient id="gsp3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+<linearGradient id="gic0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+<linearGradient id="gic1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#0d9488"/></linearGradient>
+<linearGradient id="gic2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+<linearGradient id="gic3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#be185d"/></linearGradient>
+<linearGradient id="gic4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+<filter id="gstar" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+</svg>
 <div class="milestone-toast" id="milestone-toast"></div>
 <div class="cheer-banner" id="cheer-banner"><div id="cheer-main"></div><div class="cheer-sub" id="cheer-sub"></div></div>
 </div>
@@ -953,14 +976,31 @@ function makeBubbles(){
 }
 
 // ═══════════════ HOME UI ════════════════
+function bookSVG(n){return `<svg width="46" height="58" viewBox="0 0 46 58" xmlns="http://www.w3.org/2000/svg">
+  <rect x="9" y="5" width="36" height="52" rx="4" fill="rgba(0,0,0,.22)"/>
+  <rect x="37" y="2" width="9" height="52" rx="3" fill="#f1f5f9"/>
+  <rect x="37" y="2" width="7" height="52" rx="2" fill="#e2e8f0"/>
+  <line x1="37" y1="10" x2="46" y2="10" stroke="#cbd5e1" stroke-width=".6"/>
+  <line x1="37" y1="18" x2="46" y2="18" stroke="#cbd5e1" stroke-width=".6"/>
+  <line x1="37" y1="26" x2="46" y2="26" stroke="#cbd5e1" stroke-width=".6"/>
+  <line x1="37" y1="34" x2="46" y2="34" stroke="#cbd5e1" stroke-width=".6"/>
+  <line x1="37" y1="42" x2="46" y2="42" stroke="#cbd5e1" stroke-width=".6"/>
+  <line x1="37" y1="50" x2="46" y2="50" stroke="#cbd5e1" stroke-width=".6"/>
+  <rect x="5" y="0" width="33" height="55" rx="4" fill="url(#gbk${n})"/>
+  <rect x="0" y="3" width="7" height="49" rx="2.5" fill="url(#gsp${n})"/>
+  <rect x="6.5" y="3" width="1" height="49" fill="rgba(0,0,0,.18)"/>
+  <rect x="9" y="3" width="5" height="49" rx="2.5" fill="rgba(255,255,255,.15)"/>
+  <rect x="13" y="11" width="19" height="2.5" rx="1.2" fill="rgba(255,255,255,.88)"/>
+  <rect x="13" y="16" width="13" height="2" rx="1" fill="rgba(255,255,255,.52)"/>
+  <polygon points="21,28 22.8,32.6 27.7,32.8 23.9,35.9 25.1,40.7 21,38 16.9,40.7 18.1,35.9 14.3,32.8 19.2,32.6" fill="#ffd700" filter="url(#gstar)"/>
+</svg>`;}
 function buildGradeGrid(){
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   const grades=['mid3','high1','high2','high3'];
-  const icons=['📗','📘','📙','📕'];
   grades.forEach((g,i)=>{
     const info=GRADE_INFO[g];const si=loadStageIdx(g,'all');
     const card=document.createElement('div');card.className='grade-card glass';
-    card.innerHTML=`<div class="g-icon">${icons[i]}</div><h3>${info.name}</h3><p>100단어</p><span class="g-stage">STAGE ${si+1}</span>`;
+    card.innerHTML=`<div class="g-icon">${bookSVG(i)}</div><h3>${info.name}</h3><p>100단어</p><span class="g-stage">STAGE ${si+1}</span>`;
     card.onclick=()=>checkNameAndStart(()=>goGrade(g));grid.appendChild(card);
   });
 }
