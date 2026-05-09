@@ -126,6 +126,17 @@ body{font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
 .today-card-hdr .tc-date{font-size:.78rem;font-weight:700;color:var(--primary);
   text-shadow:0 1px 4px rgba(0,180,255,.5);margin-left:2px;}
 .today-empty{color:var(--muted);font-size:.84rem;text-align:center;padding:6px 0;}
+.face-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0 4px;}
+@keyframes faceBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(4deg)}}
+@keyframes faceGlow{0%,100%{filter:drop-shadow(0 4px 10px rgba(255,210,50,.45))}50%{filter:drop-shadow(0 6px 18px rgba(255,230,80,.85))}}
+@keyframes eyeBlink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
+.face3d{animation:faceBob 2.2s ease-in-out infinite,faceGlow 2.2s ease-in-out infinite;}
+.eye-l,.eye-r{transform-origin:center;animation:eyeBlink 3.5s ease-in-out infinite;}
+.eye-r{animation-delay:.08s;}
+.sp1{animation:sparkle 1.8s ease-in-out infinite;}
+.sp2{animation:sparkle 1.8s ease-in-out infinite .6s;}
+.sp3{animation:sparkle 1.8s ease-in-out infinite 1.1s;}
 .today-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .today-stat{background:rgba(255,255,255,.1);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;}
 .today-stat .tv{font-size:1.1rem;font-weight:800;}
@@ -1328,7 +1339,37 @@ function renderTodayCard(){
   const today=new Date();
   document.getElementById('today-date-lbl').textContent=`${today.getMonth()+1}월 ${today.getDate()}일`;
   const d=loadDay(todayKey());const body=document.getElementById('today-body');
-  if(!d||!d.sessions.length){body.innerHTML='<div class="today-empty">아직 오늘 학습 기록이 없어요. 지금 시작해보세요! 🚀</div>';return;}
+  if(!d||!d.sessions.length){body.innerHTML=`<div class="today-empty face-wrap">
+    <svg class="face3d" width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="faceRg" cx="38%" cy="30%" r="68%">
+          <stop offset="0%" stop-color="#fff176"/>
+          <stop offset="45%" stop-color="#fdd835"/>
+          <stop offset="100%" stop-color="#f57f17"/>
+        </radialGradient>
+        <radialGradient id="chkRg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff8a80" stop-opacity=".7"/>
+          <stop offset="100%" stop-color="#ff8a80" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- sparkles -->
+      <g class="sp1"><polygon points="8,12 9.2,15.6 13,15.6 10,17.8 11.2,21.4 8,19.2 4.8,21.4 6,17.8 3,15.6 6.8,15.6" fill="#ffe066" opacity=".9"/></g>
+      <g class="sp2"><polygon points="62,8 63,11 66,11 63.5,12.8 64.5,15.8 62,14 59.5,15.8 60.5,12.8 58,11 61,11" fill="#ffe066" opacity=".85"/></g>
+      <g class="sp3"><polygon points="65,50 65.8,52.5 68.5,52.5 66.4,54 67.2,56.5 65,55 62.8,56.5 63.6,54 61.5,52.5 64.2,52.5" fill="#fff9c4" opacity=".8"/></g>
+      <!-- face shadow --><ellipse cx="36" cy="68" rx="20" ry="4" fill="rgba(0,0,0,.18)"/>
+      <!-- face --><circle cx="36" cy="36" r="30" fill="url(#faceRg)"/>
+      <!-- rim light --><ellipse cx="36" cy="36" rx="29.5" ry="29.5" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+      <!-- specular --><ellipse cx="26" cy="22" rx="10" ry="6" fill="rgba(255,255,255,.5)" transform="rotate(-30 26 22)"/>
+      <!-- cheeks --><ellipse cx="17" cy="46" rx="8" ry="5" fill="url(#chkRg)"/>
+      <ellipse cx="55" cy="46" rx="8" ry="5" fill="url(#chkRg)"/>
+      <!-- eyes -->
+      <g class="eye-l"><ellipse cx="24" cy="30" rx="4.5" ry="5.5" fill="#333"/><ellipse cx="25.5" cy="28" rx="1.5" ry="1.5" fill="rgba(255,255,255,.85)"/></g>
+      <g class="eye-r"><ellipse cx="48" cy="30" rx="4.5" ry="5.5" fill="#333"/><ellipse cx="49.5" cy="28" rx="1.5" ry="1.5" fill="rgba(255,255,255,.85)"/></g>
+      <!-- smile --><path d="M22 44 Q36 58 50 44" stroke="#6d3a00" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <!-- teeth --><path d="M26 46 Q36 55 46 46 Q36 52 26 46Z" fill="rgba(255,255,255,.85)"/>
+    </svg>
+    <div>아직 오늘 학습 기록이 없어요.<br>지금 시작해보세요!</div>
+  </div>`;return;}
   const total=d.totalCorrect+d.totalWrong;const acc=total?Math.round(d.totalCorrect/total*100):0;
   const r=calcRank(d.totalCorrect,total);
   body.innerHTML=`<div class="today-stats">
